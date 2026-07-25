@@ -1,4 +1,8 @@
 .dashboard {
   flex: 1;
   min-width: 0;
+
+  background: #eae9fc;
+
+  font-family: sans-serif;
 }

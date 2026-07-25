@@ -270,7 +270,12 @@ function Dashboard({ lists, selectedList }) {
 
   switch (selectedList) {
     case "all":
-      content = <AllTasksPage />;
+      content = (
+        <AllTasksPage
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+      );
       break;
 
     case "starred":
