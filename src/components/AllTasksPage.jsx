@@ -3,10 +3,22 @@ import React from "react";
 import "./AllTasksPage.css";
 import PageHeader from "./PageHeader";
 import TasksBoard from "./TasksBoard";
+import TaskCard from "./TaskCard";
 
-function AllTasksPage({ searchQuery, setSearchQuery }) {
+function AllTasksPage({
+  searchQuery,
+  setSearchQuery,
+  filteredTasks,
+  filter,
+  emptyMessage,
+  toggleTask,
+  toggleStar,
+  deleteTask,
+  handleFilter,
+  clearCompletedTasks,
+}) {
   return (
-    <div className="all-card">
+    <div className="all-tasks-page">
       <PageHeader
         title="All Tasks"
         subtitle="Manage and organize all your tasks"
@@ -14,9 +26,18 @@ function AllTasksPage({ searchQuery, setSearchQuery }) {
         setSearchQuery={setSearchQuery}
       />
 
-      {/* <TaskCard>
-        <TasksBoard />
-      </TaskCard> */}
+      <TaskCard>
+        <TasksBoard
+          filteredTasks={filteredTasks}
+          filter={filter}
+          emptyMessage={emptyMessage}
+          toggleTask={toggleTask}
+          toggleStar={toggleStar}
+          deleteTask={deleteTask}
+          handleFilter={handleFilter}
+          clearCompletedTasks={clearCompletedTasks}
+        />
+      </TaskCard>
     </div>
   );
 }

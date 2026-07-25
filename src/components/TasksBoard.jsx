@@ -4,8 +4,8 @@ import "./TasksBoard.css";
 import { Star, MoreVertical, Trash2 } from "lucide-react";
 
 function TasksBoard({
-  filter,
   filteredTasks,
+  filter,
   emptyMessage,
   toggleTask,
   toggleStar,

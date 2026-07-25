@@ -274,16 +274,50 @@ function Dashboard({ lists, selectedList }) {
         <AllTasksPage
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          filteredTasks={filteredTasks}
+          filter={filter}
+          emptyMessage={emptyMessage}
+          toggleTask={toggleTask}
+          toggleStar={toggleStar}
+          deleteTask={deleteTask}
+          handleFilter={handleFilter}
+          clearCompletedTasks={clearCompletedTasks}
         />
       );
       break;
 
     case "starred":
-      content = <ImportantTasksPage />;
+      content = (
+        <ImportantTasksPage
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filteredTasks={filteredTasks}
+          filter={filter}
+          emptyMessage={emptyMessage}
+          toggleTask={toggleTask}
+          toggleStar={toggleStar}
+          deleteTask={deleteTask}
+          handleFilter={handleFilter}
+          clearCompletedTasks={clearCompletedTasks}
+        />
+      );
       break;
 
     case "completed":
-      content = <CompletedTasksPage />;
+      content = (
+        <CompletedTasksPage
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filteredTasks={filteredTasks}
+          filter={filter}
+          emptyMessage={emptyMessage}
+          toggleTask={toggleTask}
+          toggleStar={toggleStar}
+          deleteTask={deleteTask}
+          handleFilter={handleFilter}
+          clearCompletedTasks={clearCompletedTasks}
+        />
+      );
       break;
 
     default:
