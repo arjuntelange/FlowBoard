@@ -46,6 +46,11 @@ function Dashboard({ lists, selectedList }) {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  useEffect(() => {
+    setTask("");
+    setPriority("Medium");
+  }, [selectedList]);
+
   // ======================
   // Task Actions
   // ======================
@@ -364,6 +369,12 @@ function Dashboard({ lists, selectedList }) {
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          task={task}
+          setTask={setTask}
+          priority={priority}
+          setPriority={setPriority}
+          onAddTask={addTask}
+          onHandleKeyDown={handleKeyDown}
         />
       );
   }

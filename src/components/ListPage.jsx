@@ -3,10 +3,12 @@ import "./ListPage.css";
 import PageHeader from "./PageHeader";
 import TaskCard from "./TaskCard";
 import TasksBoard from "./TasksBoard";
+import InputSection from "./InputSection";
 
 function ListPage({
   selectedList,
   searchQuery,
+
   setSearchQuery,
   filteredTasks,
   filter,
@@ -16,6 +18,13 @@ function ListPage({
   deleteTask,
   handleFilter,
   clearCompletedTasks,
+
+  task,
+  priority,
+  setTask,
+  setPriority,
+  onAddTask,
+  onHandleKeyDown,
 }) {
   return (
     <div className="user-tasks-page">
@@ -25,6 +34,17 @@ function ListPage({
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
+
+      <div className="input-container">
+        <InputSection
+          task={task}
+          setTask={setTask}
+          priority={priority}
+          setPriority={setPriority}
+          onAddTask={onAddTask}
+          onHandleKeyDown={onHandleKeyDown}
+        />
+      </div>
 
       <TaskCard>
         <TasksBoard
