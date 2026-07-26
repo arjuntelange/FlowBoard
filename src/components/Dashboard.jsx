@@ -5,6 +5,7 @@ import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
 import ImportantTasksPage from "./ImportantTasksPage";
 import CompletedTasksPage from "./CompletedTasksPage";
+import ListPage from "./ListPage.jsx";
 
 function Dashboard({ lists, selectedList }) {
   // ======================
@@ -86,7 +87,7 @@ function Dashboard({ lists, selectedList }) {
         text: task,
         completed: false,
         priority: priority,
-        listId: selectedList,
+        listId: selectedList.id,
         starred: false,
       },
     ]);
@@ -240,7 +241,7 @@ function Dashboard({ lists, selectedList }) {
 
     default:
       filteredTasks = filteredTasks.filter(
-        (task) => task.listId === selectedList,
+        (task) => task.listId === selectedList.id,
       );
   }
 
@@ -269,6 +270,35 @@ function Dashboard({ lists, selectedList }) {
   let content;
 
   switch (selectedList) {
+    case "dashboard":
+      content = (
+        <DashboardHome
+          task={task}
+          setTask={setTask}
+          filteredTasks={filteredTasks}
+          priority={priority}
+          setPriority={setPriority}
+          filter={filter}
+          addTask={addTask}
+          deleteTask={deleteTask}
+          toggleTask={toggleTask}
+          toggleStar={toggleStar}
+          handleFilter={handleFilter}
+          clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
+          totalTasks={totalTasks}
+          completedTasks={completedTasks}
+          pendingTasks={pendingTasks}
+          highPriorityTasks={highPriorityTasks}
+          completionRate={completionRate}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleKeyDown={handleKeyDown}
+          emptyMessage={emptyMessage}
+        />
+      );
+      break;
+
     case "all":
       content = (
         <AllTasksPage
@@ -322,29 +352,18 @@ function Dashboard({ lists, selectedList }) {
 
     default:
       content = (
-        <DashboardHome
-          task={task}
-          setTask={setTask}
-          filteredTasks={filteredTasks}
-          priority={priority}
-          setPriority={setPriority}
-          filter={filter}
-          addTask={addTask}
-          deleteTask={deleteTask}
-          toggleTask={toggleTask}
-          toggleStar={toggleStar}
-          handleFilter={handleFilter}
-          clearCompletedTasks={clearCompletedTasks}
-          notification={notification}
-          totalTasks={totalTasks}
-          completedTasks={completedTasks}
-          pendingTasks={pendingTasks}
-          highPriorityTasks={highPriorityTasks}
-          completionRate={completionRate}
+        <ListPage
+          selectedList={selectedList}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          handleKeyDown={handleKeyDown}
+          filteredTasks={filteredTasks}
+          filter={filter}
           emptyMessage={emptyMessage}
+          toggleTask={toggleTask}
+          toggleStar={toggleStar}
+          deleteTask={deleteTask}
+          handleFilter={handleFilter}
+          clearCompletedTasks={clearCompletedTasks}
         />
       );
   }

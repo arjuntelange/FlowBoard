@@ -71,9 +71,16 @@ function Sidebar({ lists, selectedList, setSelectedList, setList }) {
         <ul>
           {lists.map((list) => (
             <li
+              className={
+                selectedList.id === list.id ? "active-sidebar-item" : ""
+              }
               key={list.id}
-              onClick={() => setSelectedList(list.id)}
-              className={selectedList === list.id ? "active-sidebar-item" : ""}
+              onClick={() =>
+                setSelectedList({
+                  id: list.id,
+                  name: list.name,
+                })
+              }
             >
               {list.name}
             </li>
