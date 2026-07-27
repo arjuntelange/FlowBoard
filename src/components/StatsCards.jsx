@@ -52,9 +52,8 @@ function StatsCards({
               {stat.icon}
             </div>
 
-            <div>
+            <div className="icon-title">
               <h4>{stat.title}</h4>
-              <span>{stat.subtitle}</span>
             </div>
           </div>
 

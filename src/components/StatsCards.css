@@ -10,10 +10,11 @@
 }
 
 .stat-card {
-  padding: 22px;
+  padding: 18px;
 
   border-radius: 18px;
-  backdrop-filter: blur(10px);
+  background: white;
+  border: 1px solid #eef2f7;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 
   transition: all 0.25s ease;
@@ -26,14 +27,14 @@
 .stat-top {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
 
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .icon-box {
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
 
   display: flex;
   align-items: center;
@@ -42,42 +43,26 @@
   border-radius: 14px;
 }
 
-.stat-card h4 {
-  font-size: 0.9rem;
-  color: #6b7280;
+.icon-title {
+  flex: 1;
 }
 
-.stat-card span {
-  font-size: 0.8rem;
-  color: #9ca3af;
+.stat-card h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
 }
 
 .stat-card h2 {
-  font-size: 2rem;
+  padding-left: 2px;
+
+  font-size: 1.6rem;
   font-weight: 700;
   color: #111827;
 }
 
-/* Individual colors */
-
-.total-card {
-  background: linear-gradient(135deg, #ede9fe 0%, #ffffff 50%, #ddd6fe 100%);
-}
-
-.completed-card {
-  background: linear-gradient(135deg, #d1fae5 0%, #ffffff 50%, #a7f3d0 100%);
-}
-
-.pending-card {
-  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 50%, #fde68a 100%);
-}
-
-.priority-card {
-  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 50%, #fecaca 100%);
-}
-
 .total-card .icon-box {
-  background: #ddd6fe;
+  background: #eef2ff;
   color: #4f46e5;
 }
 
