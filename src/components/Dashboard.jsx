@@ -6,6 +6,7 @@ import AllTasksPage from "./AllTasksPage";
 import ImportantTasksPage from "./ImportantTasksPage";
 import CompletedTasksPage from "./CompletedTasksPage";
 import ListPage from "./ListPage.jsx";
+import EditTaskModal from "./EditTaskModal.jsx";
 
 function Dashboard({ lists, selectedList }) {
   // ======================
@@ -31,6 +32,8 @@ function Dashboard({ lists, selectedList }) {
   });
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [isEditOpen, setIsEditOpen] = useState(true);
 
   // ==================================================
   // Refs
@@ -382,8 +385,13 @@ function Dashboard({ lists, selectedList }) {
   // ==================================================
   // Render
   // ==================================================
+  return (
+    <>
+      <main className="dashboard">{content}</main>
 
-  return <main className="dashboard">{content}</main>;
+      <EditTaskModal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+    </>
+  );
 }
 
 export default Dashboard;
