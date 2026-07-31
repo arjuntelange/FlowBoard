@@ -15,6 +15,10 @@ function CompletedTasksPage({
   deleteTask,
   handleFilter,
   clearCompletedTasks,
+  isEditOpen,
+  setIsEditOpen,
+  editingTask,
+  setEditingTask,
 }) {
   return (
     <div className="completed-tasks-page">
@@ -35,6 +39,10 @@ function CompletedTasksPage({
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       </TaskCard>
     </div>

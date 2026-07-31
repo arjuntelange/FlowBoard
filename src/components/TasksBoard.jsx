@@ -12,6 +12,10 @@ function TasksBoard({
   deleteTask,
   handleFilter,
   clearCompletedTasks,
+  isEditOpen,
+  setIsEditOpen,
+  editingTask,
+  setEditingTask,
 }) {
   const [openMenu, setOpenMenu] = useState(null);
 
@@ -63,7 +67,9 @@ function TasksBoard({
                   />
                 </button>
 
-                <span className={`task-text ${elem.completed ? "completed-task" : ""}`}>
+                <span
+                  className={`task-text ${elem.completed ? "completed-task" : ""}`}
+                >
                   {elem.text}
                 </span>
               </div>
@@ -87,7 +93,19 @@ function TasksBoard({
 
                   {openMenu === elem.id && (
                     <div className="menu-dropdown">
-                      <button>Edit</button>
+                      <button
+                        onClick={() => {
+                          setIsEditOpen(true);
+                          setEditingTask({
+                            id: elem.id,
+                            text: elem.text,
+                            priority: elem.priority,
+                          });
+                          setOpenMenu(null);
+                        }}
+                      >
+                        Edit
+                      </button>
 
                       <button>Duplicate</button>
 

@@ -25,6 +25,11 @@ function ListPage({
   setPriority,
   onAddTask,
   onHandleKeyDown,
+
+  isEditOpen,
+  setIsEditOpen,
+  editingTask,
+  setEditingTask,
 }) {
   return (
     <div className="user-tasks-page">
@@ -56,6 +61,10 @@ function ListPage({
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       </TaskCard>
     </div>

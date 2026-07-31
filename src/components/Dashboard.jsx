@@ -33,7 +33,9 @@ function Dashboard({ lists, selectedList }) {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [isEditOpen, setIsEditOpen] = useState(true);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const [editingTask, setEditingTask] = useState("");
 
   // ==================================================
   // Refs
@@ -172,6 +174,30 @@ function Dashboard({ lists, selectedList }) {
     }
   }
 
+  function updateTask() {
+    setTasks(
+      tasks.map((task) =>
+        task.id === editingTask.id
+          ? {
+              ...task,
+              text: editingTask.text,
+              priority: editingTask.priority,
+            }
+          : task,
+      ),
+    );
+
+    editingTask.text.trim() === "";
+
+    setIsEditOpen(false);
+
+    showNotification(
+      "✏️ Task Updated",
+      "Changes saved successfully.",
+      "success",
+    );
+  }
+
   // ==================================================
   // UI Handlers
   // ==================================================
@@ -303,6 +329,10 @@ function Dashboard({ lists, selectedList }) {
           setSearchQuery={setSearchQuery}
           handleKeyDown={handleKeyDown}
           emptyMessage={emptyMessage}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       );
       break;
@@ -320,6 +350,10 @@ function Dashboard({ lists, selectedList }) {
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       );
       break;
@@ -337,6 +371,10 @@ function Dashboard({ lists, selectedList }) {
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       );
       break;
@@ -354,6 +392,10 @@ function Dashboard({ lists, selectedList }) {
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       );
       break;
@@ -378,6 +420,10 @@ function Dashboard({ lists, selectedList }) {
           setPriority={setPriority}
           onAddTask={addTask}
           onHandleKeyDown={handleKeyDown}
+          isEditOpen={isEditOpen}
+          setIsEditOpen={setIsEditOpen}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
         />
       );
   }
@@ -389,7 +435,13 @@ function Dashboard({ lists, selectedList }) {
     <>
       <main className="dashboard">{content}</main>
 
-      <EditTaskModal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      <EditTaskModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        editingTask={editingTask}
+        setEditingTask={setEditingTask}
+        onSave={updateTask}
+      />
     </>
   );
 }

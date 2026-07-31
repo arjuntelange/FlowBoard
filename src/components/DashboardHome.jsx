@@ -40,6 +40,11 @@ function DashboardHome({
   handleFilter,
   handleKeyDown,
   clearCompletedTasks,
+
+  isEditOpen,
+  setIsEditOpen,
+  editingTask,
+  setEditingTask,
 }) {
   return (
     <div className="container">
@@ -91,6 +96,10 @@ function DashboardHome({
             deleteTask={deleteTask}
             handleFilter={handleFilter}
             clearCompletedTasks={clearCompletedTasks}
+            isEditOpen={isEditOpen}
+            setIsEditOpen={setIsEditOpen}
+            editingTask={editingTask}
+            setEditingTask={setEditingTask}
           />
         </div>
 
