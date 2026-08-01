@@ -16,6 +16,8 @@ function TasksBoard({
   setIsEditOpen,
   editingTask,
   setEditingTask,
+  setTaskToDelete,
+  setIsDeleteOpen,
 }) {
   const [openMenu, setOpenMenu] = useState(null);
 
@@ -109,7 +111,13 @@ function TasksBoard({
 
                       <button>Duplicate</button>
 
-                      <button onClick={() => deleteTask(elem.id)}>
+                      <button
+                        onClick={() => {
+                          setTaskToDelete(elem.id);
+                          setIsDeleteOpen(true);
+                          setOpenMenu(null);
+                        }}
+                      >
                         Delete
                       </button>
                     </div>

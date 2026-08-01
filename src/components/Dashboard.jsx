@@ -7,6 +7,7 @@ import ImportantTasksPage from "./ImportantTasksPage";
 import CompletedTasksPage from "./CompletedTasksPage";
 import ListPage from "./ListPage.jsx";
 import EditTaskModal from "./EditTaskModal.jsx";
+import DeleteConfirm from "./DeleteConfirm.jsx";
 
 function Dashboard({ lists, selectedList }) {
   // ======================
@@ -36,6 +37,10 @@ function Dashboard({ lists, selectedList }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   const [editingTask, setEditingTask] = useState("");
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   // ==================================================
   // Refs
@@ -187,8 +192,6 @@ function Dashboard({ lists, selectedList }) {
       ),
     );
 
-    editingTask.text.trim() === "";
-
     setIsEditOpen(false);
 
     showNotification(
@@ -196,6 +199,13 @@ function Dashboard({ lists, selectedList }) {
       "Changes saved successfully.",
       "success",
     );
+  }
+
+  function handleDeleteConfirm() {
+    deleteTask(taskToDelete);
+
+    setIsDeleteOpen(false);
+    setTaskToDelete(null);
   }
 
   // ==================================================
@@ -333,6 +343,8 @@ function Dashboard({ lists, selectedList }) {
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       );
       break;
@@ -441,6 +453,12 @@ function Dashboard({ lists, selectedList }) {
         editingTask={editingTask}
         setEditingTask={setEditingTask}
         onSave={updateTask}
+      />
+
+      <DeleteConfirm
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={handleDeleteConfirm}
       />
     </>
   );

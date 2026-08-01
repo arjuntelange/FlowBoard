@@ -45,6 +45,8 @@ function DashboardHome({
   setIsEditOpen,
   editingTask,
   setEditingTask,
+  setTaskToDelete,
+  setIsDeleteOpen,
 }) {
   return (
     <div className="container">
@@ -100,6 +102,8 @@ function DashboardHome({
             setIsEditOpen={setIsEditOpen}
             editingTask={editingTask}
             setEditingTask={setEditingTask}
+            setTaskToDelete={setTaskToDelete}
+            setIsDeleteOpen={setIsDeleteOpen}
           />
         </div>
 

@@ -25,6 +25,8 @@
   flex-direction: column;
   gap: 16px;
 
+  font-family: sans-serif;
+
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
 }
 
