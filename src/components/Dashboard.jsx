@@ -366,6 +366,8 @@ function Dashboard({ lists, selectedList }) {
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       );
       break;
@@ -387,6 +389,8 @@ function Dashboard({ lists, selectedList }) {
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       );
       break;
@@ -408,6 +412,8 @@ function Dashboard({ lists, selectedList }) {
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       );
       break;
@@ -436,6 +442,8 @@ function Dashboard({ lists, selectedList }) {
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       );
   }

@@ -1,13 +1,16 @@
 import React from "react";
 import "./DeleteConfirm.css";
+import { Trash2 } from "lucide-react";
 
 function DeleteConfirm({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
   return (
-    <div className="delete-overlay">
-      <div className="delete-modal">
-        <div className="delete-icon">🗑️</div>
+    <div className="delete-overlay" onClick={onClose}>
+      <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="delete-icon">
+          <Trash2 size={46} />
+        </div>
 
         <h2>Delete Task?</h2>
 

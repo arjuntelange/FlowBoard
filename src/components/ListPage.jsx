@@ -30,6 +30,8 @@ function ListPage({
   setIsEditOpen,
   editingTask,
   setEditingTask,
+  setTaskToDelete,
+  setIsDeleteOpen,
 }) {
   return (
     <div className="user-tasks-page">
@@ -65,6 +67,8 @@ function ListPage({
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       </TaskCard>
     </div>

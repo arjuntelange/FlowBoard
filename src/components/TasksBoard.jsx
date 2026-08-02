@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import "./TasksBoard.css";
 import { Star, MoreVertical, Trash2 } from "lucide-react";
@@ -20,6 +20,18 @@ function TasksBoard({
   setIsDeleteOpen,
 }) {
   const [openMenu, setOpenMenu] = useState(null);
+
+  useEffect(() => {
+    function closeMenu() {
+      setOpenMenu(null);
+    }
+
+    document.addEventListener("click", closeMenu);
+
+    return () => {
+      document.removeEventListener("click", closeMenu);
+    };
+  }, []);
 
   return (
     <section className="tasks-container">
@@ -86,17 +98,21 @@ function TasksBoard({
                 <div className="task-menu">
                   <button
                     className="menu-btn"
-                    onClick={() =>
-                      setOpenMenu(openMenu === elem.id ? null : elem.id)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setOpenMenu(openMenu === elem.id ? null : elem.id);
+                    }}
                   >
                     <MoreVertical size={18} />
                   </button>
 
                   {openMenu === elem.id && (
-                    <div className="menu-dropdown">
+                    <div
+                      className="menu-dropdown"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
                           setIsEditOpen(true);
                           setEditingTask({
                             id: elem.id,
@@ -108,8 +124,6 @@ function TasksBoard({
                       >
                         Edit
                       </button>
-
-                      <button>Duplicate</button>
 
                       <button
                         onClick={() => {

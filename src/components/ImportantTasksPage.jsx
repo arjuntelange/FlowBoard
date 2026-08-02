@@ -19,6 +19,8 @@ function ImportantTasksPage({
   setIsEditOpen,
   editingTask,
   setEditingTask,
+  setTaskToDelete,
+  setIsDeleteOpen,
 }) {
   return (
     <div className="important-tasks-page">
@@ -43,6 +45,8 @@ function ImportantTasksPage({
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
           setEditingTask={setEditingTask}
+          setTaskToDelete={setTaskToDelete}
+          setIsDeleteOpen={setIsDeleteOpen}
         />
       </TaskCard>
     </div>
