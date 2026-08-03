@@ -15,6 +15,8 @@ function DashboardHome({
   priority,
   setPriority,
 
+  setDueDate,
+
   filter,
 
   filteredTasks,
@@ -87,6 +89,7 @@ function DashboardHome({
             setPriority={setPriority}
             onAddTask={addTask}
             onHandleKeyDown={handleKeyDown}
+            setDueDate={setDueDate}
           />
 
           <TasksBoard

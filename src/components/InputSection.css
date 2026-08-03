@@ -48,6 +48,37 @@
   gap: 10px;
 }
 
+.task-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-info input[type="date"] {
+  padding: 10px 12px;
+  
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  cursor: pointer;
+  outline: none;
+
+  transition: all 0.3s ease;
+
+}
+
+.task-info input[type="date"]:hover {
+  border-color: #c7d2fe;
+}
+
+.task-info input[type="date"]:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
 .task-controls select {
   padding: 10px 12px;
 

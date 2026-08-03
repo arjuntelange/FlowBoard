@@ -32,6 +32,7 @@ function ListPage({
   setEditingTask,
   setTaskToDelete,
   setIsDeleteOpen,
+  setDueDate,
 }) {
   return (
     <div className="user-tasks-page">
@@ -50,6 +51,7 @@ function ListPage({
           setPriority={setPriority}
           onAddTask={onAddTask}
           onHandleKeyDown={onHandleKeyDown}
+          setDueDate={setDueDate}
         />
       </div>
 

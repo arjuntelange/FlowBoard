@@ -8,13 +8,13 @@ function InputSection({
   priority,
   setTask,
   setPriority,
+  setDueDate,
 
   onAddTask,
   onHandleKeyDown,
 }) {
   return (
     <section className="addtask-section">
-
       <div className="input-section">
         <input
           onChange={(event) => {
@@ -28,14 +28,25 @@ function InputSection({
       </div>
 
       <div className="task-controls">
-        <select
-          value={priority}
-          onChange={(event) => setPriority(event.target.value)}
-        >
-          <option value="High">🔴 High</option>
-          <option value="Medium">🟡 Medium</option>
-          <option value="Low">🟢 Low</option>
-        </select>
+        <div className="task-info">
+          <select
+            value={priority}
+            onChange={(event) => setPriority(event.target.value)}
+          >
+            <option value="High">🔴 High</option>
+            <option value="Medium">🟡 Medium</option>
+            <option value="Low">🟢 Low</option>
+          </select>
+
+          <input
+            type="date"
+            onInput={(event) => {
+              const date = event.target.value;
+
+              setDueDate(date);
+            }}
+          />
+        </div>
 
         <button onClick={onAddTask} className="add-button">
           <Plus size={22} />

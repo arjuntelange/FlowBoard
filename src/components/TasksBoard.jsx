@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import moment from "moment";
 import { useState } from "react";
 import "./TasksBoard.css";
 import { Star, MoreVertical, Trash2 } from "lucide-react";
@@ -94,6 +95,12 @@ function TasksBoard({
                 >
                   {elem.priority}
                 </span>
+
+                {elem.dueDate && (
+                  <span className="due-date">
+                    📅 {moment(elem.dueDate).format("MMM DD")}
+                  </span>
+                )}
 
                 <div className="task-menu">
                   <button

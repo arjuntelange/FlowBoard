@@ -24,6 +24,8 @@ function Dashboard({ lists, selectedList }) {
 
   const [priority, setPriority] = useState("Medium");
 
+  const [dueDate, setDueDate] = useState("");
+
   const [filter, setFilter] = useState("all");
 
   const [notification, setNotification] = useState({
@@ -104,6 +106,7 @@ function Dashboard({ lists, selectedList }) {
         priority: priority,
         listId: selectedList.id,
         starred: false,
+        dueDate: dueDate,
       },
     ]);
     setTask("");
@@ -345,6 +348,7 @@ function Dashboard({ lists, selectedList }) {
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
+          setDueDate={setDueDate}
         />
       );
       break;
@@ -368,6 +372,7 @@ function Dashboard({ lists, selectedList }) {
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
+          setDueDate={setDueDate}
         />
       );
       break;
@@ -391,6 +396,7 @@ function Dashboard({ lists, selectedList }) {
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
+          setDueDate={setDueDate}
         />
       );
       break;
@@ -414,6 +420,7 @@ function Dashboard({ lists, selectedList }) {
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
+          setDueDate={setDueDate}
         />
       );
       break;
@@ -444,6 +451,7 @@ function Dashboard({ lists, selectedList }) {
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
+          setDueDate={setDueDate}
         />
       );
   }
