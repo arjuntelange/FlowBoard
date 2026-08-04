@@ -1,3 +1,37 @@
+/* Reusable CSS */
+
+.input-field {
+  padding: 10px 14px;
+
+  height: 46px;
+
+  background: white;
+  border: 2px solid #dbeafe;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+
+  outline: none;
+
+  transition: all 0.3s ease;
+}
+
+.input-field:hover {
+  border-color: #c7d2fe;
+}
+
+.input-field:focus {
+  border-color: #6366f1;
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.12),
+    0 8px 20px rgba(99, 102, 241, 0.15);
+}
+
+/* Normal CSS */
+
 .addtask-section {
   margin-bottom: 40px;
   padding: 22px;
@@ -17,27 +51,17 @@
 
 .input-section {
   display: flex;
-  gap: 10px;
 }
 
 .input-section input {
   flex: 1;
 
-  padding: 12px 15px;
-
-  border: 2px solid #e5e7eb;
-  border-radius: 10px;
-
-  font-size: 1rem;
-
-  outline: none;
-
-  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.input-section input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+.input-section input::placeholder {
+  color: #9ca3af;
 }
 
 .task-controls {
@@ -51,56 +75,49 @@
 .task-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
-.task-info input[type="date"] {
-  padding: 10px 12px;
-  
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 10px;
+.select-wrapper {
+  position: relative;
+}
 
-  font-size: 16px;
+.select-wrapper:focus-within .select-icon {
+  color: #6366f1;
+}
 
+.priority-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding-right: 40px;
+}
+
+.select-icon {
+  position: absolute;
+
+  top: 50%;
+  right: 14px;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+
+  color: #6b7280;
+
+  transition: color 0.3s ease;
+}
+
+.task-info input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  outline: none;
-
-  transition: all 0.3s ease;
-
+  opacity: 0.7;
+  transition: 0.2s;
 }
 
-.task-info input[type="date"]:hover {
-  border-color: #c7d2fe;
-}
-
-.task-info input[type="date"]:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
-}
-
-.task-controls select {
-  padding: 10px 12px;
-
-  border: 2px solid #e5e7eb;
-  border-radius: 10px;
-
-  font-size: 16px;
-
-  cursor: pointer;
-
-  outline: none;
-
-  transition: all 0.3s ease;
-}
-
-.task-controls select:hover {
-  border-color: #c7d2fe;
-}
-
-.task-controls select:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+.task-info input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .add-button {

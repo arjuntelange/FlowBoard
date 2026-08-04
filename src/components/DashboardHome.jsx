@@ -1,5 +1,5 @@
 import React from "react";
-import heroBg from "../assets/hero-bg-img.png";
+import heroBg from "../assets/bg-new.jpg";
 
 import Notification from "./Notification";
 import StatsCards from "./StatsCards";
