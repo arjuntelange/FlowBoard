@@ -64,14 +64,8 @@ function TasksBoard({
           <p className="empty-message">{emptyMessage}</p>
         ) : (
           filteredTasks.map((elem) => (
-            <li key={elem.id}>
-              <div className="task-left">
-                <input
-                  type="checkbox"
-                  checked={elem.completed}
-                  onChange={() => toggleTask(elem)}
-                />
-
+            <li className="task-card" key={elem.id}>
+              <div className="card-top">
                 <button
                   className={`star-btn ${elem.starred ? "starred" : ""}`}
                   onClick={() => toggleStar(elem)}
@@ -82,27 +76,13 @@ function TasksBoard({
                   />
                 </button>
 
-                <span
-                  className={`task-text ${elem.completed ? "completed-task" : ""}`}
-                >
-                  {elem.text}
-                </span>
-              </div>
-
-              <div className="task-right">
-                <span
-                  className={`priority-badge priority-${elem.priority.toLowerCase()}`}
-                >
-                  {elem.priority}
-                </span>
-
-                {elem.dueDate && (
-                  <span className="due-date">
-                    📅 {moment(elem.dueDate).format("MMM DD")}
+                <div className="card-actions">
+                  <span
+                    className={`priority-badge priority-${elem.priority.toLowerCase()}`}
+                  >
+                    {elem.priority}
                   </span>
-                )}
 
-                <div className="task-menu">
                   <button
                     className="menu-btn"
                     onClick={(e) => {
@@ -112,39 +92,61 @@ function TasksBoard({
                   >
                     <MoreVertical size={18} />
                   </button>
-
-                  {openMenu === elem.id && (
-                    <div
-                      className="menu-dropdown"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        onClick={(e) => {
-                          setIsEditOpen(true);
-                          setEditingTask({
-                            id: elem.id,
-                            text: elem.text,
-                            priority: elem.priority,
-                          });
-                          setOpenMenu(null);
-                        }}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setTaskToDelete(elem.id);
-                          setIsDeleteOpen(true);
-                          setOpenMenu(null);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
                 </div>
               </div>
+
+              <div className="card-body">
+                <input
+                  type="checkbox"
+                  checked={elem.completed}
+                  onChange={() => toggleTask(elem)}
+                />
+
+                <span
+                  className={`task-text ${
+                    elem.completed ? "completed-task" : ""
+                  }`}
+                >
+                  {elem.text}
+                </span>
+              </div>
+
+              {elem.dueDate && (
+                <div className="card-date">
+                  📅 {moment(elem.dueDate).format("MMM DD")}
+                </div>
+              )}
+
+              {openMenu === elem.id && (
+                <div
+                  className="menu-dropdown"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={() => {
+                      setIsEditOpen(true);
+                      setEditingTask({
+                        id: elem.id,
+                        text: elem.text,
+                        priority: elem.priority,
+                      });
+                      setOpenMenu(null);
+                    }}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setTaskToDelete(elem.id);
+                      setIsDeleteOpen(true);
+                      setOpenMenu(null);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </li>
           ))
         )}
