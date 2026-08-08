@@ -147,6 +147,32 @@
   color: #64748b;
 }
 
+.card-date span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #f3f4f6;
+  color: #6b7280;
+
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.due-today {
+  background: #fffbeb !important;
+  color: #d97706 !important;
+}
+
+.overdue {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+
 .completed-task {
   text-decoration: line-through;
 
