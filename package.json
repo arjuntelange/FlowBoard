@@ -1,8 +1,8 @@
 {
-  "name": "react-task-tracker",
+  "name": "FlowBoard",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://arjuntelange.github.io/react-task-tracker",
+  "homepage": "https://arjuntelange.github.io/FlowBoard",
   "type": "module",
   "scripts": {
     "dev": "vite",
