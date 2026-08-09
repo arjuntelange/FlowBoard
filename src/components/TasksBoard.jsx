@@ -11,7 +11,6 @@ function TasksBoard({
   toggleTask,
   toggleStar,
   deleteTask,
-  handleFilter,
   clearCompletedTasks,
   isEditOpen,
   setIsEditOpen,
@@ -21,6 +20,18 @@ function TasksBoard({
   setIsDeleteOpen,
 }) {
   const [openMenu, setOpenMenu] = useState(null);
+
+  const [sortBy, setSortBy] = useState("default");
+
+  const [filterBy, setFilterBy] = useState("all");
+
+  const processedTasks = [...filteredTasks];
+
+  const priorityOrder = {
+    Low: 1,
+    Medium: 2,
+    High: 3,
+  };
 
   useEffect(() => {
     function closeMenu() {
@@ -34,36 +45,96 @@ function TasksBoard({
     };
   }, []);
 
+  switch (sortBy) {
+    case "due-asc":
+      processedTasks.sort((a, b) => {
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return (
+          moment(a.dueDate, "DD-MM-YYYY") - moment(b.dueDate, "DD-MM-YYYY")
+        );
+      });
+      break;
+
+    case "due-desc":
+      processedTasks.sort((a, b) => {
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return (
+          moment(b.dueDate, "DD-MM-YYYY") - moment(a.dueDate, "DD-MM-YYYY")
+        );
+      });
+      break;
+
+    case "priority-asc":
+      processedTasks.sort(
+        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+      );
+      break;
+
+    case "priority-desc":
+      processedTasks.sort(
+        (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority],
+      );
+      break;
+
+    case "az":
+      processedTasks.sort((a, b) => {
+        return a.text.localeCompare(b.text);
+      });
+      break;
+
+    case "za":
+      processedTasks.sort((a, b) => {
+        return b.text.localeCompare(a.text);
+      });
+      break;
+
+    default:
+      break;
+  }
+
   return (
     <section className="tasks-container">
       <div className="filter-section">
-        <button
-          className={filter === "all" ? "active-filter" : ""}
-          onClick={() => handleFilter("all")}
-        >
-          All
-        </button>
-        <button
-          className={filter === "active" ? "active-filter" : ""}
-          onClick={() => handleFilter("active")}
-        >
-          Active
-        </button>
-        <button
-          className={filter === "completed" ? "active-filter" : ""}
-          onClick={() => handleFilter("completed")}
-        >
-          Completed
-        </button>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="" disabled>
+            Sort By
+          </option>
+
+          <option value="default">Default</option>
+          <option value="due-asc">Due Date ↑</option>
+          <option value="due-desc">Due Date ↓</option>
+          <option value="priority-asc">Priority ↑</option>
+          <option value="priority-desc">Priority ↓</option>
+          <option value="az">A → Z</option>
+          <option value="za">Z → A</option>
+        </select>
+
+        <select defaultValue="">
+          <option value="" disabled>
+            Filter
+          </option>
+
+          <option value="all">All Tasks</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="starred">Starred</option>
+          <option value="high">High Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="low">Low Priority</option>
+          <option value="overdue">Overdue</option>
+          <option value="today">Due Today</option>
+        </select>
       </div>
 
       <hr />
 
       <ul>
-        {filteredTasks.length === 0 ? (
+        {processedTasks.length === 0 ? (
           <p className="empty-message">{emptyMessage}</p>
         ) : (
-          filteredTasks.map((elem) => {
+          processedTasks.map((elem) => {
             const isOverdue = moment(elem.dueDate).isBefore(moment(), "day");
 
             const isToday = moment(elem.dueDate).isSame(moment(), "day");
@@ -119,7 +190,9 @@ function TasksBoard({
                 {elem.dueDate && (
                   <div className="card-date">
                     <span
-                      className={isOverdue ? "overdue" : isToday ? "due-today" : ""}
+                      className={
+                        isOverdue ? "overdue" : isToday ? "due-today" : ""
+                      }
                     >
                       📅 {moment(elem.dueDate).format("MMM DD")}
                     </span>

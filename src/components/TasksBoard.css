@@ -20,8 +20,37 @@
   margin-bottom: 30px;
 
   display: flex;
-  justify-content: flex-start;
-  gap: 20px;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.filter-section select {
+  padding: 10px 14px;
+
+  border: 1px solid #dbe4f0;
+  border-radius: 10px;
+
+  background: #f8fafc;
+  color: #374151;
+
+  font-family: sans-serif;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  outline: none;
+
+  transition: all 0.2s ease;
+}
+
+.filter-section select:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.filter-section select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .filter-section button {
