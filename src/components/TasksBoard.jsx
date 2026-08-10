@@ -2,11 +2,18 @@ import React, { useEffect } from "react";
 import moment from "moment";
 import { useState } from "react";
 import "./TasksBoard.css";
-import { Star, MoreVertical, Trash2, LockKeyhole } from "lucide-react";
+import {
+  Star,
+  MoreVertical,
+  Trash2,
+  LockKeyhole,
+  ChevronDown,
+} from "lucide-react";
 
 function TasksBoard({
   filteredTasks,
   filter,
+  handleFilter,
   emptyMessage,
   toggleTask,
   toggleStar,
@@ -23,7 +30,7 @@ function TasksBoard({
 
   const [sortBy, setSortBy] = useState("default");
 
-  const [filterBy, setFilterBy] = useState("all");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const processedTasks = [...filteredTasks];
 
@@ -94,38 +101,95 @@ function TasksBoard({
       break;
   }
 
+  console.log(filter);
+
   return (
     <section className="tasks-container">
       <div className="filter-section">
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="" disabled>
-            Sort By
-          </option>
+        <div className="sort-dropdown">
+          <select
+            value={sortBy}
+            onClick={() => {
+              if (isFilterOpen) {
+                setIsFilterOpen(false);
+              }
+            }}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+            }}
+          >
+            <option value="" disabled>
+              Sort By
+            </option>
 
-          <option value="default">Default</option>
-          <option value="due-asc">Due Date ↑</option>
-          <option value="due-desc">Due Date ↓</option>
-          <option value="priority-asc">Priority ↑</option>
-          <option value="priority-desc">Priority ↓</option>
-          <option value="az">A → Z</option>
-          <option value="za">Z → A</option>
-        </select>
+            <option value="default">Default</option>
+            <option value="due-asc">Due Date ↑</option>
+            <option value="due-desc">Due Date ↓</option>
+            <option value="priority-asc">Priority ↑</option>
+            <option value="priority-desc">Priority ↓</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+          </select>
 
-        <select defaultValue="">
-          <option value="" disabled>
-            Filter
-          </option>
+          <ChevronDown className="sort-icon" size={16} />
+        </div>
 
-          <option value="all">All Tasks</option>
-          <option value="active">Active</option>
-          <option value="completed">Completed</option>
-          <option value="starred">Starred</option>
-          <option value="high">High Priority</option>
-          <option value="medium">Medium Priority</option>
-          <option value="low">Low Priority</option>
-          <option value="overdue">Overdue</option>
-          <option value="today">Due Today</option>
-        </select>
+        <div className="filter-dropdown">
+          <button
+            className="filter-btn"
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+          >
+            Filter <ChevronDown size={16} />
+          </button>
+
+          {isFilterOpen && (
+            <div className="filter-menu">
+              <label>
+                <input type="checkbox" />
+                Active
+              </label>
+
+              <label>
+                <input type="checkbox" />
+                Completed
+              </label>
+
+              <label>
+                <input type="checkbox" />
+                Starred
+              </label>
+
+              <hr />
+
+              <label>
+                <input type="checkbox" />
+                High Priority
+              </label>
+
+              <label>
+                <input type="checkbox" />
+                Medium Priority
+              </label>
+
+              <label>
+                <input type="checkbox" />
+                Low Priority
+              </label>
+
+              <hr />
+
+              <label>
+                <input type="checkbox" />
+                Overdue
+              </label>
+
+              <label>
+                <input type="checkbox" />
+                Due Today
+              </label>
+            </div>
+          )}
+        </div>
       </div>
 
       <hr />

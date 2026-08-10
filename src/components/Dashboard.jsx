@@ -300,6 +300,10 @@ function Dashboard({ lists, selectedList }) {
     filteredTasks = filteredTasks.filter((task) => task.completed);
   }
 
+  if (filter === "starred") {
+    filteredTasks = filteredTasks.filter((task) => task.starred);
+  }
+
   if (searchQuery.trim()) {
     filteredTasks = filteredTasks.filter((currentTask) =>
       currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
