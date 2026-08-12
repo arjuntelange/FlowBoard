@@ -32,6 +32,17 @@ function TasksBoard({
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  const [selectedFilters, setSelectedFilters] = useState({
+    active: false,
+    completed: false,
+    starred: false,
+    highPriority: false,
+    mediumPriority: false,
+    lowPriority: false,
+    overdue: false,
+    dueToday: false,
+  });
+
   const processedTasks = [...filteredTasks];
 
   const priorityOrder = {
@@ -101,7 +112,93 @@ function TasksBoard({
       break;
   }
 
-  console.log(filter);
+  function toggleFilter(filterName) {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [filterName]: !prev[filterName],
+    }));
+  }
+
+  const activeFilters = Object.entries(selectedFilters)
+    .filter(([key, value]) => value)
+    .map(([key]) => key);
+
+  const statusFilters = activeFilters.filter(
+    (filter) => filter === "active" || filter === "completed",
+  );
+
+  const priorityFilters = activeFilters.filter(
+    (filter) =>
+      filter === "highPriority" ||
+      filter === "mediumPriority" ||
+      filter === "lowPriority",
+  );
+
+  const otherFilters = activeFilters.filter(
+    (filter) =>
+      filter === "starred" || filter === "overdue" || filter === "dueToday",
+  );
+
+  const filteredBySelectedFilters = processedTasks.filter((task) => {
+    const statusMatches =
+      statusFilters.length === 0 ||
+      statusFilters.some((filter) => {
+        switch (filter) {
+          case "active":
+            return !task.completed;
+
+          case "completed":
+            return task.completed;
+
+          default:
+            return false;
+        }
+      });
+
+    const priorityMatches =
+      priorityFilters.length === 0 ||
+      priorityFilters.some((filter) => {
+        switch (filter) {
+          case "highPriority":
+            return task.priority === "High";
+
+          case "mediumPriority":
+            return task.priority === "Medium";
+
+          case "lowPriority":
+            return task.priority === "Low";
+
+          default:
+            return false;
+        }
+      });
+
+    const otherFiltersMatch =
+      otherFilters.length === 0 ||
+      otherFilters.every((filter) => {
+        switch (filter) {
+          case "overdue":
+            return (
+              task.dueDate &&
+              moment(task.dueDate, "DD-MM-YYYY").isBefore(moment(), "day")
+            );
+
+          case "dueToday":
+            return (
+              task.dueDate &&
+              moment(task.dueDate, "DD-MM-YYYY").isSame(moment(), "day")
+            );
+
+          case "starred":
+            return task.starred;
+
+          default:
+            return false;
+        }
+      });
+
+    return statusMatches && priorityMatches && otherFiltersMatch;
+  });
 
   return (
     <section className="tasks-container">
@@ -137,7 +234,9 @@ function TasksBoard({
         <div className="filter-dropdown">
           <button
             className="filter-btn"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            onClick={() => {
+              setIsFilterOpen(!isFilterOpen);
+            }}
           >
             Filter <ChevronDown size={16} />
           </button>
@@ -145,46 +244,78 @@ function TasksBoard({
           {isFilterOpen && (
             <div className="filter-menu">
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("active")}
+                  checked={selectedFilters.active}
+                />
                 Active
               </label>
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("completed")}
+                  checked={selectedFilters.completed}
+                />
                 Completed
               </label>
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("starred")}
+                  checked={selectedFilters.starred}
+                />
                 Starred
               </label>
 
               <hr />
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("highPriority")}
+                  checked={selectedFilters.highPriority}
+                />
                 High Priority
               </label>
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("mediumPriority")}
+                  checked={selectedFilters.mediumPriority}
+                />
                 Medium Priority
               </label>
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("lowPriority")}
+                  checked={selectedFilters.lowPriority}
+                />
                 Low Priority
               </label>
 
               <hr />
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("overdue")}
+                  checked={selectedFilters.overdue}
+                />
                 Overdue
               </label>
 
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onChange={() => toggleFilter("dueToday")}
+                  checked={selectedFilters.dueToday}
+                />
                 Due Today
               </label>
             </div>
@@ -195,10 +326,10 @@ function TasksBoard({
       <hr />
 
       <ul>
-        {processedTasks.length === 0 ? (
+        {filteredBySelectedFilters.length === 0 ? (
           <p className="empty-message">{emptyMessage}</p>
         ) : (
-          processedTasks.map((elem) => {
+          filteredBySelectedFilters.map((elem) => {
             const isOverdue = moment(elem.dueDate).isBefore(moment(), "day");
 
             const isToday = moment(elem.dueDate).isSame(moment(), "day");

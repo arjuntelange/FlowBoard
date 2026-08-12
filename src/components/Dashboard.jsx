@@ -292,6 +292,16 @@ function Dashboard({ lists, selectedList }) {
       );
   }
 
+  if (searchQuery.trim()) {
+    filteredTasks = filteredTasks.filter((currentTask) =>
+      currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }
+
+  if (searchQuery.trim() && filteredTasks.length === 0) {
+    emptyMessage = "🔍 No tasks match your search.";
+  }
+
   if (filter === "active") {
     filteredTasks = filteredTasks.filter((task) => !task.completed);
   }
@@ -302,16 +312,6 @@ function Dashboard({ lists, selectedList }) {
 
   if (filter === "starred") {
     filteredTasks = filteredTasks.filter((task) => task.starred);
-  }
-
-  if (searchQuery.trim()) {
-    filteredTasks = filteredTasks.filter((currentTask) =>
-      currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }
-
-  if (searchQuery.trim() && filteredTasks.length === 0) {
-    emptyMessage = "🔍 No tasks match your search.";
   }
 
   // ==================================================
