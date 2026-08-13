@@ -338,12 +338,10 @@
   background: #b8d9ff;
 }
 
-/* Filter dropdown wrapper */
 .filter-dropdown {
   position: relative;
 }
 
-/* Filter button */
 .filter-btn {
   padding: 10px 12px 10px 14px;
 
@@ -380,7 +378,6 @@
   color: #6b7280;
 }
 
-/* Filter menu */
 .filter-menu {
   position: absolute;
 
@@ -402,7 +399,6 @@
   z-index: 100;
 }
 
-/* Individual filter option */
 .filter-menu label {
   display: flex;
   align-items: center;
@@ -427,7 +423,6 @@
   background: #f3f4f6;
 }
 
-/* Checkbox */
 .filter-menu input[type="checkbox"] {
   width: 16px;
   height: 16px;
@@ -439,10 +434,32 @@
   cursor: pointer;
 }
 
-/* Separators */
 .filter-menu hr {
   margin: 6px 4px;
 
   border: none;
   border-top: 1px solid #e5e7eb;
+}
+
+.clear-filters-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+
+  background: #4f46e5;
+  border: none;
+  border-radius: 10px;
+
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
+  
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
 }

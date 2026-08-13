@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import moment from "moment";
 import { useState } from "react";
 import "./TasksBoard.css";
@@ -51,6 +51,8 @@ function TasksBoard({
     High: 3,
   };
 
+  const filterRef = useRef(null);
+
   useEffect(() => {
     function closeMenu() {
       setOpenMenu(null);
@@ -62,6 +64,20 @@ function TasksBoard({
       document.removeEventListener("click", closeMenu);
     };
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  });
 
   switch (sortBy) {
     case "due-asc":
@@ -117,6 +133,19 @@ function TasksBoard({
       ...prev,
       [filterName]: !prev[filterName],
     }));
+  }
+
+  function clearFilters() {
+    setSelectedFilters({
+      active: false,
+      completed: false,
+      starred: false,
+      highPriority: false,
+      mediumPriority: false,
+      lowPriority: false,
+      overdue: false,
+      dueToday: false,
+    });
   }
 
   const activeFilters = Object.entries(selectedFilters)
@@ -231,10 +260,11 @@ function TasksBoard({
           <ChevronDown className="sort-icon" size={16} />
         </div>
 
-        <div className="filter-dropdown">
+        <div className="filter-dropdown" ref={filterRef}>
           <button
             className="filter-btn"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setIsFilterOpen(!isFilterOpen);
             }}
           >
@@ -318,6 +348,12 @@ function TasksBoard({
                 />
                 Due Today
               </label>
+
+              <hr />
+
+              <button className="clear-filters-btn" onClick={clearFilters}>
+                Clear Filters
+              </button>
             </div>
           )}
         </div>
