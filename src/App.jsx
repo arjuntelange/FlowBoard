@@ -12,6 +12,8 @@ function App() {
 
   const [selectedList, setSelectedList] = useState("dashboard");
 
+  const [isInputOpen, setIsInputOpen] = useState(false);
+
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists));
   }, [lists]);
@@ -24,9 +26,17 @@ function App() {
           selectedList={selectedList}
           setSelectedList={setSelectedList}
           setList={setList}
+          isInputOpen={isInputOpen}
+          setIsInputOpen={setIsInputOpen}
         />
 
-        <Dashboard selectedList={selectedList} lists={lists} />
+        <Dashboard
+          selectedList={selectedList}
+          lists={lists}
+          setList={setList}
+          isInputOpen={isInputOpen}
+          setIsInputOpen={setIsInputOpen}
+        />
       </div>
     </>
   );

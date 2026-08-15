@@ -8,8 +8,9 @@ import CompletedTasksPage from "./CompletedTasksPage";
 import ListPage from "./ListPage.jsx";
 import EditTaskModal from "./EditTaskModal.jsx";
 import DeleteConfirm from "./DeleteConfirm.jsx";
+import ListInputModal from "./ListInputModal.jsx";
 
-function Dashboard({ lists, selectedList }) {
+function Dashboard({ lists, selectedList, setList, isInputOpen, setIsInputOpen }) {
   // ======================
   // State
   // ======================
@@ -62,6 +63,50 @@ function Dashboard({ lists, selectedList }) {
     setTask("");
     setPriority("Medium");
   }, [selectedList]);
+
+  // ======================
+  // List Actions
+  // ======================
+
+  function handleCreateList(listName) {
+    if (!listName.trim()) {
+      showNotification(
+        "⚠️ Invalid Name",
+        "List name cannot be empty.",
+        "error",
+      );
+      return;
+    }
+
+    const duplicate = lists.some(
+      (list) => list.name.toLowerCase() === listName.trim().toLowerCase(),
+    );
+
+    if (duplicate) {
+      showNotification(
+        "⚠️ List Already Exists",
+        "Choose a different name.",
+        "error",
+      );
+      return;
+    }
+
+    setList((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: listName.trim(),
+      },
+    ]);
+
+    setIsInputOpen(false);
+
+    showNotification(
+      "🎉 List Created",
+      "New task list added successfully.",
+      "success",
+    );
+  }
 
   // ======================
   // Task Actions
@@ -479,6 +524,12 @@ function Dashboard({ lists, selectedList }) {
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
         onConfirm={handleDeleteConfirm}
+      />
+
+      <ListInputModal
+        isOpen={isInputOpen}
+        onClose={() => setIsInputOpen(false)}
+        onCreateList={handleCreateList}
       />
     </>
   );

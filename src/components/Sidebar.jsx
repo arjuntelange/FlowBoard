@@ -13,7 +13,14 @@ import {
 } from "lucide-react";
 import "./Sidebar.css";
 
-function Sidebar({ lists, selectedList, setSelectedList, setList }) {
+function Sidebar({
+  lists,
+  selectedList,
+  setSelectedList,
+  setList,
+  isInputOpen,
+  setIsInputOpen,
+}) {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -87,21 +94,7 @@ function Sidebar({ lists, selectedList, setSelectedList, setList }) {
           ))}
         </ul>
 
-        <button
-          onClick={() => {
-            const listName = prompt("Enter list name");
-
-            if (!listName.trim()) return;
-
-            setList((prevLists) => [
-              ...prevLists,
-              {
-                id: Date.now(),
-                name: listName,
-              },
-            ]);
-          }}
-        >
+        <button onClick={() => setIsInputOpen(true)}>
           <Plus size={18} />
           New List
         </button>
