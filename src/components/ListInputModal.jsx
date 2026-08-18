@@ -21,6 +21,7 @@ function ListInputModal({ isOpen, onClose, onCreateList }) {
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               onCreateList(listName);
+              setListName("");
             }
           }}
         />
@@ -30,7 +31,13 @@ function ListInputModal({ isOpen, onClose, onCreateList }) {
             Cancel
           </button>
 
-          <button className="create-btn" onClick={() => onCreateList(listName)}>
+          <button
+            className="create-btn"
+            onClick={() => {
+              onCreateList(listName);
+              setListName("");
+            }}
+          >
             Create List
           </button>
         </div>

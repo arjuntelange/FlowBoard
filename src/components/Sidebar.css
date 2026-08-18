@@ -100,7 +100,12 @@ hr {
   margin-bottom: 20px;
 }
 
+.list-wrapper {
+  position: relative;
+}
+
 .sidebar-tasks li {
+  position: relative;
   padding: 8px;
   margin-bottom: 8px;
 
@@ -120,7 +125,70 @@ hr {
   transform: translateX(4px);
 }
 
-.sidebar-tasks button {
+.list-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+
+  min-width: 120px;
+
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+  z-index: 100;
+}
+
+.list-dropdown button {
+  width: 100%;
+  padding: 10px 12px;
+
+  border: none;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+}
+
+.list-dropdown button:hover {
+  background: #eef2ff;
+}
+
+.list-menu {
+  margin-left: auto;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.list-menu:hover {
+  background: rgba(79, 70, 229, 0.1);
+
+  color: #4f46e5;
+}
+
+.list-menu:active {
+  transform: scale(0.95);
+}
+
+.sidebar-tasks > button {
   width: 100%;
   padding: 10px;
 
