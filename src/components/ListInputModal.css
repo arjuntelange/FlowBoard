@@ -9,6 +9,8 @@
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
 
+  font-family: sans-serif;
+
   z-index: 1000;
 }
 
@@ -28,7 +30,8 @@
   margin-bottom: 8px;
 
   color: #4f46e5;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .input-modal p {
@@ -88,7 +91,9 @@
   background: #4f46e5;
   color: white;
 
+  font-size: 0.95rem;
   font-weight: 600;
+  font-family: inherit;
 
   cursor: pointer;
 }
