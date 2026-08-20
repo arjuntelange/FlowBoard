@@ -21,6 +21,9 @@ function Sidebar({
   setList,
   isInputOpen,
   setIsInputOpen,
+  isListEditOpen,
+  setIsListEditOpen,
+  setEditingList,
 }) {
   const [openMenuId, setOpenMenuId] = useState(null);
   return (
@@ -106,7 +109,15 @@ function Sidebar({
 
               {openMenuId === list.id && (
                 <div className="list-dropdown">
-                  <button>Edit</button>
+                  <button
+                    onClick={() => {
+                      setEditingList(list)
+                      setIsListEditOpen(true);
+                      setOpenMenuId(null);
+                    }}
+                  >
+                    Edit
+                  </button>
                   <button>Delete</button>
                 </div>
               )}
