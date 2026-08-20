@@ -14,6 +14,10 @@ function App() {
 
   const [isInputOpen, setIsInputOpen] = useState(false);
 
+  const [isListEditOpen, setIsListEditOpen] = useState(false);
+
+  const [editingList, setEditingList] = useState(null);
+
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists));
   }, [lists]);
@@ -28,6 +32,9 @@ function App() {
           setList={setList}
           isInputOpen={isInputOpen}
           setIsInputOpen={setIsInputOpen}
+          isListEditOpen={isListEditOpen}
+          setIsListEditOpen={setIsListEditOpen}
+          setEditingList={setEditingList}
         />
 
         <Dashboard
@@ -36,6 +43,10 @@ function App() {
           setList={setList}
           isInputOpen={isInputOpen}
           setIsInputOpen={setIsInputOpen}
+          isListEditOpen={isListEditOpen}
+          setIsListEditOpen={setIsListEditOpen}
+          editingList={editingList}
+          setEditingList={setEditingList}
         />
       </div>
     </>

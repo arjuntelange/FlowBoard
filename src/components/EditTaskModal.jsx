@@ -42,12 +42,12 @@ function EditTaskModal({
         </select>
 
         <div className="edit-actions">
-          <button className="save-btn" onClick={onSave}>
-            Save
-          </button>
-
           <button className="cancel-btn" onClick={onClose}>
             Cancel
+          </button>
+
+          <button className="save-btn" onClick={onSave}>
+            Save
           </button>
         </div>
       </div>

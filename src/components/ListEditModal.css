@@ -1,0 +1,142 @@
+.list-edit-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(8px);
+
+  z-index: 1000;
+}
+
+.list-edit-modal {
+  width: 420px;
+
+  padding: 28px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  font-family: sans-serif;
+
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.list-edit-modal h2 {
+  margin: 0;
+
+  font-size: 1.8rem;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.list-edit-modal p {
+  margin: 0;
+
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  color: #6b7280;
+}
+
+.list-edit-modal input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  font-family: sans-serif;
+  font-size: 1rem;
+  color: #111827;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.list-edit-modal input::placeholder {
+  color: #9ca3af;
+}
+
+.list-edit-modal input:hover {
+  border-color: #a5b4fc;
+}
+
+.list-edit-modal input:focus {
+  border-color: #4f46e5;
+
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.list-edit-actions {
+  margin-top: 8px;
+
+  display: flex;
+  gap: 12px;
+}
+
+.list-edit-actions button {
+  flex: 1;
+
+  padding: 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Cancel */
+
+.list-edit-actions button:first-child {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.list-edit-actions button:first-child:hover {
+  background: #dbe4ff;
+}
+
+.list-edit-actions button:first-child:active {
+  transform: scale(0.98);
+}
+
+/* Save */
+
+.list-edit-actions button:last-child {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.list-edit-actions button:last-child:hover {
+  background: #4338ca;
+
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.list-edit-actions button:last-child:active {
+  transform: scale(0.98);
+}

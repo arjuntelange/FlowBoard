@@ -9,8 +9,19 @@ import ListPage from "./ListPage.jsx";
 import EditTaskModal from "./EditTaskModal.jsx";
 import DeleteConfirm from "./DeleteConfirm.jsx";
 import ListInputModal from "./ListInputModal.jsx";
+import ListEditModal from "./ListEditModal.jsx";
 
-function Dashboard({ lists, selectedList, setList, isInputOpen, setIsInputOpen }) {
+function Dashboard({
+  lists,
+  selectedList,
+  setList,
+  isInputOpen,
+  setIsInputOpen,
+  isListEditOpen,
+  setIsListEditOpen,
+  editingList,
+  setEditingList,
+}) {
   // ======================
   // State
   // ======================
@@ -104,6 +115,52 @@ function Dashboard({ lists, selectedList, setList, isInputOpen, setIsInputOpen }
     showNotification(
       "🎉 List Created",
       "New task list added successfully.",
+      "success",
+    );
+  }
+
+  function handleEditList() {
+    if (!editingList?.name.trim()) {
+      showNotification(
+        "⚠️ Invalid List Name",
+        "List name cannot be empty.",
+        "error",
+      );
+
+      return;
+    }
+
+    const duplicate = lists.some(
+      (list) =>
+        list.id !== editingList.id &&
+        list.name.trim().toLowerCase() ===
+          editingList.name.trim().toLowerCase(),
+    );
+
+    if (duplicate) {
+      showNotification(
+        "⚠️ List Already Exists",
+        "Choose a different name.",
+        "error",
+      );
+
+      return;
+    }
+
+    setList((prevList) =>
+      prevList.map((list) =>
+        list.id === editingList.id
+          ? { ...list, name: editingList.name.trim() }
+          : list,
+      ),
+    );
+
+    setIsListEditOpen(false);
+    setEditingList(null);
+
+    showNotification(
+      "✏️ List Updated",
+      "List name updated successfully.",
       "success",
     );
   }
@@ -415,6 +472,7 @@ function Dashboard({ lists, selectedList, setList, isInputOpen, setIsInputOpen }
           deleteTask={deleteTask}
           handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
           editingTask={editingTask}
@@ -530,6 +588,17 @@ function Dashboard({ lists, selectedList, setList, isInputOpen, setIsInputOpen }
         isOpen={isInputOpen}
         onClose={() => setIsInputOpen(false)}
         onCreateList={handleCreateList}
+      />
+
+      <ListEditModal
+        isOpen={isListEditOpen}
+        onClose={() => {
+          setIsListEditOpen(false);
+          setEditingList(null);
+        }}
+        editingList={editingList}
+        setEditingList={setEditingList}
+        onSave={handleEditList}
       />
     </>
   );

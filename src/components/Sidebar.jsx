@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Rocket,
   ListTodo,
@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   House,
   ClipboardCheck,
+  EllipsisVertical,
 } from "lucide-react";
 import "./Sidebar.css";
 
@@ -20,7 +21,11 @@ function Sidebar({
   setList,
   isInputOpen,
   setIsInputOpen,
+  isListEditOpen,
+  setIsListEditOpen,
+  setEditingList,
 }) {
+  const [openMenuId, setOpenMenuId] = useState(null);
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -77,20 +82,46 @@ function Sidebar({
 
         <ul>
           {lists.map((list) => (
-            <li
-              className={
-                selectedList.id === list.id ? "active-sidebar-item" : ""
-              }
-              key={list.id}
-              onClick={() =>
-                setSelectedList({
-                  id: list.id,
-                  name: list.name,
-                })
-              }
-            >
-              {list.name}
-            </li>
+            <div key={list.id} className="list-wrapper">
+              <li
+                className={
+                  selectedList.id === list.id ? "active-sidebar-item" : ""
+                }
+                key={list.id}
+                onClick={() =>
+                  setSelectedList({
+                    id: list.id,
+                    name: list.name,
+                  })
+                }
+              >
+                {list.name}
+                <button
+                  className="list-menu"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenuId(openMenuId === list.id ? null : list.id);
+                  }}
+                >
+                  <EllipsisVertical size={16} />
+                </button>
+              </li>
+
+              {openMenuId === list.id && (
+                <div className="list-dropdown">
+                  <button
+                    onClick={() => {
+                      setEditingList(list)
+                      setIsListEditOpen(true);
+                      setOpenMenuId(null);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button>Delete</button>
+                </div>
+              )}
+            </div>
           ))}
         </ul>
 
