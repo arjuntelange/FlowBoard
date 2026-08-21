@@ -18,6 +18,10 @@ function App() {
 
   const [editingList, setEditingList] = useState(null);
 
+  const [isListDeleteOpen, setIsListDeleteOpen] = useState(false);
+
+  const [listToDelete, setListToDelete] = useState(null);
+
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists));
   }, [lists]);
@@ -35,6 +39,10 @@ function App() {
           isListEditOpen={isListEditOpen}
           setIsListEditOpen={setIsListEditOpen}
           setEditingList={setEditingList}
+          isListDeleteOpen={isListDeleteOpen}
+          setIsListDeleteOpen={setIsListDeleteOpen}
+          listToDelete={listToDelete}
+          setListToDelete={setListToDelete}
         />
 
         <Dashboard
@@ -47,6 +55,10 @@ function App() {
           setIsListEditOpen={setIsListEditOpen}
           editingList={editingList}
           setEditingList={setEditingList}
+          isListDeleteOpen={isListDeleteOpen}
+          setIsListDeleteOpen={setIsListDeleteOpen}
+          listToDelete={listToDelete}
+          setListToDelete={setListToDelete}
         />
       </div>
     </>

@@ -10,6 +10,7 @@ import EditTaskModal from "./EditTaskModal.jsx";
 import DeleteConfirm from "./DeleteConfirm.jsx";
 import ListInputModal from "./ListInputModal.jsx";
 import ListEditModal from "./ListEditModal.jsx";
+import ListDeleteModal from "./ListDeleteModal.jsx";
 
 function Dashboard({
   lists,
@@ -21,6 +22,10 @@ function Dashboard({
   setIsListEditOpen,
   editingList,
   setEditingList,
+  isListDeleteOpen,
+  setIsListDeleteOpen,
+  listToDelete,
+  setListToDelete,
 }) {
   // ======================
   // State
@@ -599,6 +604,16 @@ function Dashboard({
         editingList={editingList}
         setEditingList={setEditingList}
         onSave={handleEditList}
+      />
+
+      <ListDeleteModal
+        isOpen={isListDeleteOpen}
+        onClose={() => {
+          setIsListDeleteOpen(false);
+          setListToDelete(null);
+        }}
+        listToDelete={listToDelete}
+        onConfirm={() => {}}
       />
     </>
   );
