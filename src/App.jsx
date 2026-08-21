@@ -47,6 +47,7 @@ function App() {
 
         <Dashboard
           selectedList={selectedList}
+          setSelectedList={setSelectedList}
           lists={lists}
           setList={setList}
           isInputOpen={isInputOpen}

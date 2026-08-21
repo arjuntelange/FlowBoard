@@ -15,6 +15,7 @@ import ListDeleteModal from "./ListDeleteModal.jsx";
 function Dashboard({
   lists,
   selectedList,
+  setSelectedList,
   setList,
   isInputOpen,
   setIsInputOpen,
@@ -166,6 +167,26 @@ function Dashboard({
     showNotification(
       "✏️ List Updated",
       "List name updated successfully.",
+      "success",
+    );
+  }
+
+  function handleDeleteList() {
+    setList(lists.filter((list) => list.id !== listToDelete.id));
+
+    setTasks(tasks.filter((task) => task.listId !== listToDelete.id));
+
+    setIsListDeleteOpen(false);
+
+    setListToDelete(null);
+
+    if (selectedList.id === listToDelete.id) {
+      setSelectedList("dashboard");
+    }
+
+    showNotification(
+      "🗑️ List Deleted",
+      "The list and all its tasks have been removed.",
       "success",
     );
   }
@@ -613,7 +634,7 @@ function Dashboard({
           setListToDelete(null);
         }}
         listToDelete={listToDelete}
-        onConfirm={() => {}}
+        onConfirm={handleDeleteList}
       />
     </>
   );
