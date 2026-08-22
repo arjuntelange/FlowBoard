@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import moment from "moment";
 import { useState } from "react";
 import "./TasksBoard.css";
@@ -148,25 +148,30 @@ function TasksBoard({
     });
   }
 
-  const activeFilters = Object.entries(selectedFilters)
-    .filter(([key, value]) => value)
-    .map(([key]) => key);
+  const { activeFilters, statusFilters, priorityFilters, otherFilters } =
+    useMemo(() => {
+      const activeFilters = Object.entries(selectedFilters)
+        .filter(([, value]) => value)
+        .map(([key]) => key);
 
-  const statusFilters = activeFilters.filter(
-    (filter) => filter === "active" || filter === "completed",
-  );
+      const statusFilters = activeFilters.filter(
+        (filter) => filter === "active" || filter === "completed",
+      );
 
-  const priorityFilters = activeFilters.filter(
-    (filter) =>
-      filter === "highPriority" ||
-      filter === "mediumPriority" ||
-      filter === "lowPriority",
-  );
+      const priorityFilters = activeFilters.filter(
+        (filter) =>
+          filter === "highPriority" ||
+          filter === "mediumPriority" ||
+          filter === "lowPriority",
+      );
 
-  const otherFilters = activeFilters.filter(
-    (filter) =>
-      filter === "starred" || filter === "overdue" || filter === "dueToday",
-  );
+      const otherFilters = activeFilters.filter(
+        (filter) =>
+          filter === "starred" || filter === "overdue" || filter === "dueToday",
+      );
+
+      return { activeFilters, statusFilters, priorityFilters, otherFilters };
+    }, [selectedFilters]);
 
   const filteredBySelectedFilters = processedTasks.filter((task) => {
     const statusMatches =
