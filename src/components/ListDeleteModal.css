@@ -1,0 +1,93 @@
+.list-delete-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(8px);
+
+  z-index: 9999;
+}
+
+.list-delete-modal {
+  width: 420px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 28px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  font-family: sans-serif;
+
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.list-delete-modal h2 {
+  margin: 0;
+
+  font-size: 1.8rem;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.list-delete-modal p {
+  margin: 0;
+
+  font-size: 1rem;
+  color: #4b5563;
+
+  line-height: 1.6;
+}
+
+.warning-text {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.list-delete-actions {
+  margin-top: 20px;
+
+  display: flex;
+  gap: 12px;
+}
+
+.list-delete-actions button {
+  flex: 1;
+
+  padding: 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.list-delete-actions button:first-child {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.list-delete-actions button:first-child:hover {
+  background: #dbe4ff;
+}
+
+.list-delete-actions button:last-child {
+  background: #dc2626;
+  color: white;
+}
+
+.list-delete-actions button:last-child:hover {
+  background: #b91c1c;
+}

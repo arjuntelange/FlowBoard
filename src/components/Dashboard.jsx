@@ -10,10 +10,12 @@ import EditTaskModal from "./EditTaskModal.jsx";
 import DeleteConfirm from "./DeleteConfirm.jsx";
 import ListInputModal from "./ListInputModal.jsx";
 import ListEditModal from "./ListEditModal.jsx";
+import ListDeleteModal from "./ListDeleteModal.jsx";
 
 function Dashboard({
   lists,
   selectedList,
+  setSelectedList,
   setList,
   isInputOpen,
   setIsInputOpen,
@@ -21,6 +23,10 @@ function Dashboard({
   setIsListEditOpen,
   editingList,
   setEditingList,
+  isListDeleteOpen,
+  setIsListDeleteOpen,
+  listToDelete,
+  setListToDelete,
 }) {
   // ======================
   // State
@@ -161,6 +167,26 @@ function Dashboard({
     showNotification(
       "✏️ List Updated",
       "List name updated successfully.",
+      "success",
+    );
+  }
+
+  function handleDeleteList() {
+    setList(lists.filter((list) => list.id !== listToDelete.id));
+
+    setTasks(tasks.filter((task) => task.listId !== listToDelete.id));
+
+    setIsListDeleteOpen(false);
+
+    setListToDelete(null);
+
+    if (selectedList.id === listToDelete.id) {
+      setSelectedList("dashboard");
+    }
+
+    showNotification(
+      "🗑️ List Deleted",
+      "The list and all its tasks have been removed.",
       "success",
     );
   }
@@ -599,6 +625,16 @@ function Dashboard({
         editingList={editingList}
         setEditingList={setEditingList}
         onSave={handleEditList}
+      />
+
+      <ListDeleteModal
+        isOpen={isListDeleteOpen}
+        onClose={() => {
+          setIsListDeleteOpen(false);
+          setListToDelete(null);
+        }}
+        listToDelete={listToDelete}
+        onConfirm={handleDeleteList}
       />
     </>
   );
