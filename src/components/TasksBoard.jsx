@@ -10,6 +10,12 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+const priorityOrder = {
+  Low: 1,
+  Medium: 2,
+  High: 3,
+};
+
 function TasksBoard({
   filteredTasks,
   filter,
@@ -43,13 +49,60 @@ function TasksBoard({
     dueToday: false,
   });
 
-  const processedTasks = [...filteredTasks];
+  const processedTasks = useMemo(() => {
+    const taskCopy = [...filteredTasks];
 
-  const priorityOrder = {
-    Low: 1,
-    Medium: 2,
-    High: 3,
-  };
+    switch (sortBy) {
+      case "due-asc":
+        taskCopy.sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return (
+            moment(a.dueDate, "DD-MM-YYYY") - moment(b.dueDate, "DD-MM-YYYY")
+          );
+        });
+        break;
+
+      case "due-desc":
+        taskCopy.sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return (
+            moment(b.dueDate, "DD-MM-YYYY") - moment(a.dueDate, "DD-MM-YYYY")
+          );
+        });
+        break;
+
+      case "priority-asc":
+        taskCopy.sort(
+          (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+        );
+        break;
+
+      case "priority-desc":
+        taskCopy.sort(
+          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority],
+        );
+        break;
+
+      case "az":
+        taskCopy.sort((a, b) => {
+          return a.text.localeCompare(b.text);
+        });
+        break;
+
+      case "za":
+        taskCopy.sort((a, b) => {
+          return b.text.localeCompare(a.text);
+        });
+        break;
+
+      default:
+        break;
+    }
+
+    return taskCopy;
+  }, [filteredTasks, sortBy]);
 
   const filterRef = useRef(null);
 
@@ -77,56 +130,7 @@ function TasksBoard({
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  });
-
-  switch (sortBy) {
-    case "due-asc":
-      processedTasks.sort((a, b) => {
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return (
-          moment(a.dueDate, "DD-MM-YYYY") - moment(b.dueDate, "DD-MM-YYYY")
-        );
-      });
-      break;
-
-    case "due-desc":
-      processedTasks.sort((a, b) => {
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return (
-          moment(b.dueDate, "DD-MM-YYYY") - moment(a.dueDate, "DD-MM-YYYY")
-        );
-      });
-      break;
-
-    case "priority-asc":
-      processedTasks.sort(
-        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
-      );
-      break;
-
-    case "priority-desc":
-      processedTasks.sort(
-        (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority],
-      );
-      break;
-
-    case "az":
-      processedTasks.sort((a, b) => {
-        return a.text.localeCompare(b.text);
-      });
-      break;
-
-    case "za":
-      processedTasks.sort((a, b) => {
-        return b.text.localeCompare(a.text);
-      });
-      break;
-
-    default:
-      break;
-  }
+  }, []);
 
   function toggleFilter(filterName) {
     setSelectedFilters((prev) => ({
@@ -173,66 +177,68 @@ function TasksBoard({
       return { activeFilters, statusFilters, priorityFilters, otherFilters };
     }, [selectedFilters]);
 
-  const filteredBySelectedFilters = processedTasks.filter((task) => {
-    const statusMatches =
-      statusFilters.length === 0 ||
-      statusFilters.some((filter) => {
-        switch (filter) {
-          case "active":
-            return !task.completed;
+  const filteredBySelectedFilters = useMemo(() => {
+    return processedTasks.filter((task) => {
+      const statusMatches =
+        statusFilters.length === 0 ||
+        statusFilters.some((filter) => {
+          switch (filter) {
+            case "active":
+              return !task.completed;
 
-          case "completed":
-            return task.completed;
+            case "completed":
+              return task.completed;
 
-          default:
-            return false;
-        }
-      });
+            default:
+              return false;
+          }
+        });
 
-    const priorityMatches =
-      priorityFilters.length === 0 ||
-      priorityFilters.some((filter) => {
-        switch (filter) {
-          case "highPriority":
-            return task.priority === "High";
+      const priorityMatches =
+        priorityFilters.length === 0 ||
+        priorityFilters.some((filter) => {
+          switch (filter) {
+            case "highPriority":
+              return task.priority === "High";
 
-          case "mediumPriority":
-            return task.priority === "Medium";
+            case "mediumPriority":
+              return task.priority === "Medium";
 
-          case "lowPriority":
-            return task.priority === "Low";
+            case "lowPriority":
+              return task.priority === "Low";
 
-          default:
-            return false;
-        }
-      });
+            default:
+              return false;
+          }
+        });
 
-    const otherFiltersMatch =
-      otherFilters.length === 0 ||
-      otherFilters.every((filter) => {
-        switch (filter) {
-          case "overdue":
-            return (
-              task.dueDate &&
-              moment(task.dueDate, "DD-MM-YYYY").isBefore(moment(), "day")
-            );
+      const otherFiltersMatch =
+        otherFilters.length === 0 ||
+        otherFilters.every((filter) => {
+          switch (filter) {
+            case "overdue":
+              return (
+                task.dueDate &&
+                moment(task.dueDate, "DD-MM-YYYY").isBefore(moment(), "day")
+              );
 
-          case "dueToday":
-            return (
-              task.dueDate &&
-              moment(task.dueDate, "DD-MM-YYYY").isSame(moment(), "day")
-            );
+            case "dueToday":
+              return (
+                task.dueDate &&
+                moment(task.dueDate, "DD-MM-YYYY").isSame(moment(), "day")
+              );
 
-          case "starred":
-            return task.starred;
+            case "starred":
+              return task.starred;
 
-          default:
-            return false;
-        }
-      });
+            default:
+              return false;
+          }
+        });
 
-    return statusMatches && priorityMatches && otherFiltersMatch;
-  });
+      return statusMatches && priorityMatches && otherFiltersMatch;
+    });
+  }, [processedTasks, priorityFilters, statusFilters, otherFilters]);
 
   return (
     <section className="tasks-container">
