@@ -23,7 +23,7 @@ function AllTasksPage({
   setEditingTask,
   setTaskToDelete,
   setIsDeleteOpen,
-  notification
+  notification,
 }) {
   return (
     <div className="all-tasks-page">
@@ -64,4 +64,4 @@ function AllTasksPage({
   );
 }
 
-export default AllTasksPage;
+export default React.memo(AllTasksPage);

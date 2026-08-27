@@ -53,4 +53,4 @@ function ImportantTasksPage({
   );
 }
 
-export default ImportantTasksPage;
+export default React.memo(ImportantTasksPage);

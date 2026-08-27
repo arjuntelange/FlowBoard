@@ -53,4 +53,4 @@ function CompletedTasksPage({
   );
 }
 
-export default CompletedTasksPage;
+export default React.memo(CompletedTasksPage);

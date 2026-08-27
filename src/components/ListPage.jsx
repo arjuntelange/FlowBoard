@@ -77,4 +77,4 @@ function ListPage({
   );
 }
 
-export default ListPage;
+export default React.memo(ListPage);

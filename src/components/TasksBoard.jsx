@@ -486,4 +486,4 @@ function TasksBoard({
   );
 }
 
-export default TasksBoard;
+export default React.memo(TasksBoard);
