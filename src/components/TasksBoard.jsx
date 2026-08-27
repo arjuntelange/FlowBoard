@@ -49,6 +49,54 @@ function TasksBoard({
     dueToday: false,
   });
 
+  const filterRef = useRef(null);
+
+  useEffect(() => {
+    function closeMenu() {
+      setOpenMenu(null);
+    }
+
+    document.addEventListener("click", closeMenu);
+
+    return () => {
+      document.removeEventListener("click", closeMenu);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  function toggleFilter(filterName) {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [filterName]: !prev[filterName],
+    }));
+  }
+
+  function clearFilters() {
+    setSelectedFilters({
+      active: false,
+      completed: false,
+      starred: false,
+      highPriority: false,
+      mediumPriority: false,
+      lowPriority: false,
+      overdue: false,
+      dueToday: false,
+    });
+  }
+
   const processedTasks = useMemo(() => {
     const taskCopy = [...filteredTasks];
 
@@ -103,54 +151,6 @@ function TasksBoard({
 
     return taskCopy;
   }, [filteredTasks, sortBy]);
-
-  const filterRef = useRef(null);
-
-  useEffect(() => {
-    function closeMenu() {
-      setOpenMenu(null);
-    }
-
-    document.addEventListener("click", closeMenu);
-
-    return () => {
-      document.removeEventListener("click", closeMenu);
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (filterRef.current && !filterRef.current.contains(event.target)) {
-        setIsFilterOpen(false);
-      }
-    }
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  function toggleFilter(filterName) {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [filterName]: !prev[filterName],
-    }));
-  }
-
-  function clearFilters() {
-    setSelectedFilters({
-      active: false,
-      completed: false,
-      starred: false,
-      highPriority: false,
-      mediumPriority: false,
-      lowPriority: false,
-      overdue: false,
-      dueToday: false,
-    });
-  }
 
   const { activeFilters, statusFilters, priorityFilters, otherFilters } =
     useMemo(() => {
