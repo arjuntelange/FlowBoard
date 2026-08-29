@@ -1,4 +1,3 @@
-import React from "react";
 import "./PageHeader.css";
 
 function PageHeader({ title, subtitle, searchQuery, setSearchQuery }) {

@@ -1,4 +1,3 @@
-import React from "react";
 import "./ProgressOverview.css";
 import { ChartColumn } from "lucide-react";
 

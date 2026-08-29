@@ -1,27 +1,26 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import moment from "moment";
 import { useState } from "react";
 import "./TasksBoard.css";
 import {
   Star,
   MoreVertical,
-  Trash2,
-  LockKeyhole,
   ChevronDown,
 } from "lucide-react";
 
+const priorityOrder = {
+  Low: 1,
+  Medium: 2,
+  High: 3,
+};
+
 function TasksBoard({
   filteredTasks,
-  filter,
-  handleFilter,
   emptyMessage,
   toggleTask,
   toggleStar,
-  deleteTask,
   clearCompletedTasks,
-  isEditOpen,
   setIsEditOpen,
-  editingTask,
   setEditingTask,
   setTaskToDelete,
   setIsDeleteOpen,
@@ -42,14 +41,6 @@ function TasksBoard({
     overdue: false,
     dueToday: false,
   });
-
-  const processedTasks = [...filteredTasks];
-
-  const priorityOrder = {
-    Low: 1,
-    Medium: 2,
-    High: 3,
-  };
 
   const filterRef = useRef(null);
 
@@ -77,56 +68,7 @@ function TasksBoard({
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  });
-
-  switch (sortBy) {
-    case "due-asc":
-      processedTasks.sort((a, b) => {
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return (
-          moment(a.dueDate, "DD-MM-YYYY") - moment(b.dueDate, "DD-MM-YYYY")
-        );
-      });
-      break;
-
-    case "due-desc":
-      processedTasks.sort((a, b) => {
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return (
-          moment(b.dueDate, "DD-MM-YYYY") - moment(a.dueDate, "DD-MM-YYYY")
-        );
-      });
-      break;
-
-    case "priority-asc":
-      processedTasks.sort(
-        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
-      );
-      break;
-
-    case "priority-desc":
-      processedTasks.sort(
-        (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority],
-      );
-      break;
-
-    case "az":
-      processedTasks.sort((a, b) => {
-        return a.text.localeCompare(b.text);
-      });
-      break;
-
-    case "za":
-      processedTasks.sort((a, b) => {
-        return b.text.localeCompare(a.text);
-      });
-      break;
-
-    default:
-      break;
-  }
+  }, []);
 
   function toggleFilter(filterName) {
     setSelectedFilters((prev) => ({
@@ -148,86 +90,148 @@ function TasksBoard({
     });
   }
 
-  const activeFilters = Object.entries(selectedFilters)
-    .filter(([key, value]) => value)
-    .map(([key]) => key);
+  const processedTasks = useMemo(() => {
+    const taskCopy = [...filteredTasks];
 
-  const statusFilters = activeFilters.filter(
-    (filter) => filter === "active" || filter === "completed",
-  );
+    switch (sortBy) {
+      case "due-asc":
+        taskCopy.sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return (
+            moment(a.dueDate, "DD-MM-YYYY") - moment(b.dueDate, "DD-MM-YYYY")
+          );
+        });
+        break;
 
-  const priorityFilters = activeFilters.filter(
-    (filter) =>
-      filter === "highPriority" ||
-      filter === "mediumPriority" ||
-      filter === "lowPriority",
-  );
+      case "due-desc":
+        taskCopy.sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return (
+            moment(b.dueDate, "DD-MM-YYYY") - moment(a.dueDate, "DD-MM-YYYY")
+          );
+        });
+        break;
 
-  const otherFilters = activeFilters.filter(
-    (filter) =>
-      filter === "starred" || filter === "overdue" || filter === "dueToday",
-  );
+      case "priority-asc":
+        taskCopy.sort(
+          (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+        );
+        break;
 
-  const filteredBySelectedFilters = processedTasks.filter((task) => {
-    const statusMatches =
-      statusFilters.length === 0 ||
-      statusFilters.some((filter) => {
-        switch (filter) {
-          case "active":
-            return !task.completed;
+      case "priority-desc":
+        taskCopy.sort(
+          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority],
+        );
+        break;
 
-          case "completed":
-            return task.completed;
+      case "az":
+        taskCopy.sort((a, b) => {
+          return a.text.localeCompare(b.text);
+        });
+        break;
 
-          default:
-            return false;
-        }
-      });
+      case "za":
+        taskCopy.sort((a, b) => {
+          return b.text.localeCompare(a.text);
+        });
+        break;
 
-    const priorityMatches =
-      priorityFilters.length === 0 ||
-      priorityFilters.some((filter) => {
-        switch (filter) {
-          case "highPriority":
-            return task.priority === "High";
+      default:
+        break;
+    }
 
-          case "mediumPriority":
-            return task.priority === "Medium";
+    return taskCopy;
+  }, [filteredTasks, sortBy]);
 
-          case "lowPriority":
-            return task.priority === "Low";
+  const { activeFilters, statusFilters, priorityFilters, otherFilters } =
+    useMemo(() => {
+      const activeFilters = Object.entries(selectedFilters)
+        .filter(([, value]) => value)
+        .map(([key]) => key);
 
-          default:
-            return false;
-        }
-      });
+      const statusFilters = activeFilters.filter(
+        (filter) => filter === "active" || filter === "completed",
+      );
 
-    const otherFiltersMatch =
-      otherFilters.length === 0 ||
-      otherFilters.every((filter) => {
-        switch (filter) {
-          case "overdue":
-            return (
-              task.dueDate &&
-              moment(task.dueDate, "DD-MM-YYYY").isBefore(moment(), "day")
-            );
+      const priorityFilters = activeFilters.filter(
+        (filter) =>
+          filter === "highPriority" ||
+          filter === "mediumPriority" ||
+          filter === "lowPriority",
+      );
 
-          case "dueToday":
-            return (
-              task.dueDate &&
-              moment(task.dueDate, "DD-MM-YYYY").isSame(moment(), "day")
-            );
+      const otherFilters = activeFilters.filter(
+        (filter) =>
+          filter === "starred" || filter === "overdue" || filter === "dueToday",
+      );
 
-          case "starred":
-            return task.starred;
+      return { activeFilters, statusFilters, priorityFilters, otherFilters };
+    }, [selectedFilters]);
 
-          default:
-            return false;
-        }
-      });
+  const filteredBySelectedFilters = useMemo(() => {
+    return processedTasks.filter((task) => {
+      const statusMatches =
+        statusFilters.length === 0 ||
+        statusFilters.some((filter) => {
+          switch (filter) {
+            case "active":
+              return !task.completed;
 
-    return statusMatches && priorityMatches && otherFiltersMatch;
-  });
+            case "completed":
+              return task.completed;
+
+            default:
+              return false;
+          }
+        });
+
+      const priorityMatches =
+        priorityFilters.length === 0 ||
+        priorityFilters.some((filter) => {
+          switch (filter) {
+            case "highPriority":
+              return task.priority === "High";
+
+            case "mediumPriority":
+              return task.priority === "Medium";
+
+            case "lowPriority":
+              return task.priority === "Low";
+
+            default:
+              return false;
+          }
+        });
+
+      const otherFiltersMatch =
+        otherFilters.length === 0 ||
+        otherFilters.every((filter) => {
+          switch (filter) {
+            case "overdue":
+              return (
+                task.dueDate &&
+                moment(task.dueDate, "DD-MM-YYYY").isBefore(moment(), "day")
+              );
+
+            case "dueToday":
+              return (
+                task.dueDate &&
+                moment(task.dueDate, "DD-MM-YYYY").isSame(moment(), "day")
+              );
+
+            case "starred":
+              return task.starred;
+
+            default:
+              return false;
+          }
+        });
+
+      return statusMatches && priorityMatches && otherFiltersMatch;
+    });
+  }, [processedTasks, priorityFilters, statusFilters, otherFilters]);
 
   return (
     <section className="tasks-container">
@@ -475,4 +479,4 @@ function TasksBoard({
   );
 }
 
-export default TasksBoard;
+export default React.memo(TasksBoard);

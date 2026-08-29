@@ -1,4 +1,3 @@
-import React from "react";
 import heroBg from "../assets/bg-new.jpg";
 
 import Notification from "./Notification";
@@ -17,8 +16,6 @@ function DashboardHome({
 
   setDueDate,
 
-  filter,
-
   filteredTasks,
   
   totalTasks,
@@ -35,17 +32,13 @@ function DashboardHome({
   notification,
 
   addTask,
-  deleteTask,
   toggleTask,
   toggleStar,
 
-  handleFilter,
   handleKeyDown,
   clearCompletedTasks,
 
-  isEditOpen,
   setIsEditOpen,
-  editingTask,
   setEditingTask,
   setTaskToDelete,
   setIsDeleteOpen,
@@ -93,17 +86,12 @@ function DashboardHome({
           />
 
           <TasksBoard
-            filter={filter}
             filteredTasks={filteredTasks}
             emptyMessage={emptyMessage}
             toggleTask={toggleTask}
             toggleStar={toggleStar}
-            deleteTask={deleteTask}
-            handleFilter={handleFilter}
             clearCompletedTasks={clearCompletedTasks}
-            isEditOpen={isEditOpen}
             setIsEditOpen={setIsEditOpen}
-            editingTask={editingTask}
             setEditingTask={setEditingTask}
             setTaskToDelete={setTaskToDelete}
             setIsDeleteOpen={setIsDeleteOpen}

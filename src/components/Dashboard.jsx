@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Rocket, Star } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
@@ -82,50 +81,77 @@ function Dashboard({
   }, [selectedList]);
 
   // ======================
+  // Notification
+  // ======================
+
+  const showNotification = useCallback((title, message, type) => {
+    setNotification({
+      title: title,
+      message: message,
+      type: type,
+    });
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      setNotification({
+        title: "",
+        message: "",
+        type: "",
+      });
+    }, 2000);
+  }, []);
+
+  // ======================
   // List Actions
   // ======================
 
-  function handleCreateList(listName) {
-    if (!listName.trim()) {
-      showNotification(
-        "⚠️ Invalid Name",
-        "List name cannot be empty.",
-        "error",
+  const handleCreateList = useCallback(
+    (listName) => {
+      if (!listName.trim()) {
+        showNotification(
+          "⚠️ Invalid Name",
+          "List name cannot be empty.",
+          "error",
+        );
+        return;
+      }
+
+      const duplicate = lists.some(
+        (list) => list.name.toLowerCase() === listName.trim().toLowerCase(),
       );
-      return;
-    }
 
-    const duplicate = lists.some(
-      (list) => list.name.toLowerCase() === listName.trim().toLowerCase(),
-    );
+      if (duplicate) {
+        showNotification(
+          "⚠️ List Already Exists",
+          "Choose a different name.",
+          "error",
+        );
+        return;
+      }
 
-    if (duplicate) {
+      setList((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          name: listName.trim(),
+        },
+      ]);
+
+      setIsInputOpen(false);
+
       showNotification(
-        "⚠️ List Already Exists",
-        "Choose a different name.",
-        "error",
+        "🎉 List Created",
+        "New task list added successfully.",
+        "success",
       );
-      return;
-    }
+    },
+    [lists],
+  );
 
-    setList((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        name: listName.trim(),
-      },
-    ]);
-
-    setIsInputOpen(false);
-
-    showNotification(
-      "🎉 List Created",
-      "New task list added successfully.",
-      "success",
-    );
-  }
-
-  function handleEditList() {
+  const handleEditList = useCallback(() => {
     if (!editingList?.name.trim()) {
       showNotification(
         "⚠️ Invalid List Name",
@@ -169,9 +195,9 @@ function Dashboard({
       "List name updated successfully.",
       "success",
     );
-  }
+  }, [lists, editingList]);
 
-  function handleDeleteList() {
+  const handleDeleteList = useCallback(() => {
     setList(lists.filter((list) => list.id !== listToDelete.id));
 
     setTasks(tasks.filter((task) => task.listId !== listToDelete.id));
@@ -189,13 +215,13 @@ function Dashboard({
       "The list and all its tasks have been removed.",
       "success",
     );
-  }
+  }, [lists, tasks, selectedList, listToDelete]);
 
   // ======================
   // Task Actions
   // ======================
 
-  function addTask() {
+  const addTask = useCallback(() => {
     if (!task.trim()) return;
 
     if (
@@ -244,21 +270,21 @@ function Dashboard({
       "Your task has been added successfully.",
       "success",
     );
-  }
+  }, [task, priority, dueDate, selectedList, tasks]);
 
-  function deleteTask(taskId) {
-    setTasks(tasks.filter((elem) => elem.id !== taskId));
+  const deleteTask = useCallback((taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((elem) => elem.id !== taskId));
 
     showNotification(
       "🗑️ Task Deleted",
       "The task has been removed.",
       "success",
     );
-  }
+  }, []);
 
-  function toggleTask(currentTask) {
-    setTasks(
-      tasks.map((elem) => {
+  const toggleTask = useCallback((currentTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((elem) => {
         if (elem.id === currentTask.id) {
           return { ...elem, completed: !elem.completed };
         }
@@ -276,11 +302,11 @@ function Dashboard({
         "success",
       );
     }
-  }
+  }, []);
 
-  function toggleStar(currentTask) {
-    setTasks(
-      tasks.map((elem) => {
+  const toggleStar = useCallback((currentTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((elem) => {
         if (elem.id === currentTask.id) {
           return { ...elem, starred: !elem.starred };
         }
@@ -288,9 +314,9 @@ function Dashboard({
         return elem;
       }),
     );
-  }
+  }, []);
 
-  function clearCompletedTasks() {
+  const clearCompletedTasks = useCallback(() => {
     const checkTask = tasks.some((taskCheck) => taskCheck.completed);
 
     if (checkTask) {
@@ -308,9 +334,9 @@ function Dashboard({
         "info",
       );
     }
-  }
+  }, [tasks]);
 
-  function updateTask() {
+  const updateTask = useCallback(() => {
     setTasks(
       tasks.map((task) =>
         task.id === editingTask.id
@@ -330,117 +356,116 @@ function Dashboard({
       "Changes saved successfully.",
       "success",
     );
-  }
+  }, [tasks, editingTask, showNotification]);
 
-  function handleDeleteConfirm() {
+  const handleDeleteConfirm = useCallback(() => {
     deleteTask(taskToDelete);
 
     setIsDeleteOpen(false);
     setTaskToDelete(null);
-  }
+  }, [deleteTask, taskToDelete]);
 
   // ==================================================
   // UI Handlers
   // ==================================================
 
-  function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      addTask();
-    }
-  }
-
-  function handleFilter(filterType) {
-    setFilter(filterType);
-  }
-
-  function showNotification(title, message, type) {
-    setNotification({
-      title: title,
-      message: message,
-      type: type,
-    });
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      setNotification({
-        title: "",
-        message: "",
-        type: "",
-      });
-    }, 2000);
-  }
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        addTask();
+      }
+    },
+    [addTask],
+  );
 
   // ======================
   // Dashboard Statistics
   // ======================
 
-  const totalTasks = tasks.length;
+  const {
+    totalTasks,
+    completedTasks,
+    pendingTasks,
+    highPriorityTasks,
+    completionRate,
+  } = useMemo(() => {
+    const totalTasks = tasks.length;
 
-  const completedTasks = tasks.filter((task) => task.completed).length;
+    const completedTasks = tasks.filter((task) => task.completed).length;
 
-  const pendingTasks = tasks.length - completedTasks;
+    const pendingTasks = tasks.length - completedTasks;
 
-  const highPriorityTasks = tasks.filter(
-    (task) => task.priority === "High",
-  ).length;
+    const highPriorityTasks = tasks.filter(
+      (task) => task.priority === "High",
+    ).length;
 
-  const completionRate =
-    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+    const completionRate =
+      totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+    return {
+      totalTasks,
+      completedTasks,
+      pendingTasks,
+      highPriorityTasks,
+      completionRate,
+    };
+  }, [tasks]);
 
   // ======================
   // Filtered Task Data
   // ======================
 
-  let filteredTasks = tasks;
+  const filteredTasks = useMemo(() => {
+    let result = tasks;
 
-  let emptyMessage = "🎉 No tasks yet. Add your first task to get started!";
+    switch (selectedList) {
+      case "starred":
+        result = result.filter((task) => task.starred);
+        break;
 
-  switch (selectedList) {
-    case "starred":
-      filteredTasks = filteredTasks.filter((task) => task.starred);
-      break;
+      case "dashboard":
+        result = result.filter((task) => !task.completed);
+        break;
 
-    case "dashboard":
-      filteredTasks = filteredTasks.filter((task) => !task.completed);
-      break;
+      case "completed":
+        result = result.filter((task) => task.completed);
+        break;
 
-    case "completed":
-      filteredTasks = filteredTasks.filter((task) => task.completed);
-      break;
+      case "all":
+        break;
 
-    case "all":
-      break;
+      default:
+        result = result.filter((task) => task.listId === selectedList.id);
+    }
 
-    default:
-      filteredTasks = filteredTasks.filter(
-        (task) => task.listId === selectedList.id,
+    if (searchQuery.trim()) {
+      result = result.filter((currentTask) =>
+        currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
       );
-  }
+    }
 
-  if (searchQuery.trim()) {
-    filteredTasks = filteredTasks.filter((currentTask) =>
-      currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }
+    if (filter === "active") {
+      result = result.filter((task) => !task.completed);
+    }
 
-  if (searchQuery.trim() && filteredTasks.length === 0) {
-    emptyMessage = "🔍 No tasks match your search.";
-  }
+    if (filter === "completed") {
+      result = result.filter((task) => task.completed);
+    }
 
-  if (filter === "active") {
-    filteredTasks = filteredTasks.filter((task) => !task.completed);
-  }
+    if (filter === "starred") {
+      result = result.filter((task) => task.starred);
+    }
 
-  if (filter === "completed") {
-    filteredTasks = filteredTasks.filter((task) => task.completed);
-  }
+    return result;
+  }, [tasks, selectedList, searchQuery, filter]);
 
-  if (filter === "starred") {
-    filteredTasks = filteredTasks.filter((task) => task.starred);
-  }
+  const emptyMessage = useMemo(() => {
+    if (searchQuery.trim() && filteredTasks.length === 0) {
+      return "🔍 No tasks match your search.";
+    }
+
+    return "🎉 No tasks yet. Add your first task to get started!";
+  }, [searchQuery, filteredTasks]);
 
   // ==================================================
   // Page Routing
@@ -457,12 +482,9 @@ function Dashboard({
           filteredTasks={filteredTasks}
           priority={priority}
           setPriority={setPriority}
-          filter={filter}
           addTask={addTask}
-          deleteTask={deleteTask}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
           notification={notification}
           totalTasks={totalTasks}
@@ -474,9 +496,7 @@ function Dashboard({
           setSearchQuery={setSearchQuery}
           handleKeyDown={handleKeyDown}
           emptyMessage={emptyMessage}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -491,17 +511,12 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
           notification={notification}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -516,16 +531,11 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -540,16 +550,11 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -565,12 +570,9 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
           task={task}
           setTask={setTask}
@@ -578,9 +580,7 @@ function Dashboard({
           setPriority={setPriority}
           onAddTask={addTask}
           onHandleKeyDown={handleKeyDown}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
