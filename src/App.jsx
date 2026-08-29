@@ -33,15 +33,10 @@ function App() {
           lists={lists}
           selectedList={selectedList}
           setSelectedList={setSelectedList}
-          setList={setList}
-          isInputOpen={isInputOpen}
           setIsInputOpen={setIsInputOpen}
-          isListEditOpen={isListEditOpen}
           setIsListEditOpen={setIsListEditOpen}
           setEditingList={setEditingList}
-          isListDeleteOpen={isListDeleteOpen}
           setIsListDeleteOpen={setIsListDeleteOpen}
-          listToDelete={listToDelete}
           setListToDelete={setListToDelete}
         />
 

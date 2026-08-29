@@ -1,6 +1,5 @@
 import "./DashboardSidebar.css";
 import MiniCalendar from "./MiniCalendar";
-import { ChartColumn } from "lucide-react";
 import ProgressOverview from "./ProgressOverview";
 import DailyQuote from "./DailyQuote";
 

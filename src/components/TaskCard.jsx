@@ -1,4 +1,3 @@
-import React from "react";
 import "./TaskCard.css";
 
 function TaskCard({ children }) {

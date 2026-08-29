@@ -5,8 +5,6 @@ import "./TasksBoard.css";
 import {
   Star,
   MoreVertical,
-  Trash2,
-  LockKeyhole,
   ChevronDown,
 } from "lucide-react";
 
@@ -18,16 +16,11 @@ const priorityOrder = {
 
 function TasksBoard({
   filteredTasks,
-  filter,
-  handleFilter,
   emptyMessage,
   toggleTask,
   toggleStar,
-  deleteTask,
   clearCompletedTasks,
-  isEditOpen,
   setIsEditOpen,
-  editingTask,
   setEditingTask,
   setTaskToDelete,
   setIsDeleteOpen,

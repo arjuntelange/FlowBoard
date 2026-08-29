@@ -1,4 +1,3 @@
-import React from "react";
 import "./DeleteConfirm.css";
 import { Trash2 } from "lucide-react";
 

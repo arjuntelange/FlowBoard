@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Rocket,
   ListTodo,
   Star,
-  Smile,
   Plus,
-  User,
-  FolderOpen,
-  LayoutDashboard,
   House,
   ClipboardCheck,
   EllipsisVertical,
@@ -18,15 +14,10 @@ function Sidebar({
   lists,
   selectedList,
   setSelectedList,
-  setList,
-  isInputOpen,
   setIsInputOpen,
-  isListEditOpen,
   setIsListEditOpen,
   setEditingList,
-  isListDeleteOpen,
   setIsListDeleteOpen,
-  listToDelete,
   setListToDelete,
 }) {
   const [openMenuId, setOpenMenuId] = useState(null);

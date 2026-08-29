@@ -1,4 +1,3 @@
-import React from "react";
 import "./InputSection.css";
 import { ChevronDown, Plus } from "lucide-react";
 

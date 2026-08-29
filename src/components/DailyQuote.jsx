@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import "./DailyQuote.css";
 import { Quote, RefreshCcw } from "lucide-react";
 
@@ -30,7 +30,7 @@ function DailyQuote() {
     }, 500);
   }
 
-  function getRandomQuote() {
+  const getRandomQuote = useCallback(() => {
     let newQuote;
 
     do {
@@ -39,7 +39,7 @@ function DailyQuote() {
     } while (newQuote === quote);
 
     setQuote(newQuote);
-  }
+  }, []);
 
   useEffect(() => {
     getRandomQuote();

@@ -1,4 +1,3 @@
-import React from "react";
 import "./Notification.css";
 
 function Notification({ title, message, type }) {

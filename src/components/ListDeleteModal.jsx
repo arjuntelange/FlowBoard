@@ -1,4 +1,3 @@
-import React from "react";
 import "./ListDeleteModal.css";
 
 function ListDeleteModal({ isOpen, onClose, listToDelete, onConfirm }) {

@@ -11,12 +11,9 @@ function ListPage({
 
   setSearchQuery,
   filteredTasks,
-  filter,
   emptyMessage,
   toggleTask,
   toggleStar,
-  deleteTask,
-  handleFilter,
   clearCompletedTasks,
 
   task,
@@ -26,9 +23,7 @@ function ListPage({
   onAddTask,
   onHandleKeyDown,
 
-  isEditOpen,
   setIsEditOpen,
-  editingTask,
   setEditingTask,
   setTaskToDelete,
   setIsDeleteOpen,
@@ -58,16 +53,11 @@ function ListPage({
       <TaskCard>
         <TasksBoard
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}

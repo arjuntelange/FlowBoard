@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Rocket, Star } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
@@ -86,6 +79,30 @@ function Dashboard({
     setTask("");
     setPriority("Medium");
   }, [selectedList]);
+
+  // ======================
+  // Notification
+  // ======================
+
+  const showNotification = useCallback((title, message, type) => {
+    setNotification({
+      title: title,
+      message: message,
+      type: type,
+    });
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      setNotification({
+        title: "",
+        message: "",
+        type: "",
+      });
+    }, 2000);
+  }, []);
 
   // ======================
   // List Actions
@@ -361,30 +378,6 @@ function Dashboard({
     [addTask],
   );
 
-  const handleFilter = useCallback((filterType) => {
-    setFilter(filterType);
-  }, []);
-
-  function showNotification(title, message, type) {
-    setNotification({
-      title: title,
-      message: message,
-      type: type,
-    });
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      setNotification({
-        title: "",
-        message: "",
-        type: "",
-      });
-    }, 2000);
-  }
-
   // ======================
   // Dashboard Statistics
   // ======================
@@ -445,32 +438,34 @@ function Dashboard({
         result = result.filter((task) => task.listId === selectedList.id);
     }
 
+    if (searchQuery.trim()) {
+      result = result.filter((currentTask) =>
+        currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+    }
+
+    if (filter === "active") {
+      result = result.filter((task) => !task.completed);
+    }
+
+    if (filter === "completed") {
+      result = result.filter((task) => task.completed);
+    }
+
+    if (filter === "starred") {
+      result = result.filter((task) => task.starred);
+    }
+
     return result;
-  }, [tasks, selectedList]);
+  }, [tasks, selectedList, searchQuery, filter]);
 
-  let emptyMessage = "🎉 No tasks yet. Add your first task to get started!";
+  const emptyMessage = useMemo(() => {
+    if (searchQuery.trim() && filteredTasks.length === 0) {
+      return "🔍 No tasks match your search.";
+    }
 
-  if (searchQuery.trim()) {
-    filteredTasks = filteredTasks.filter((currentTask) =>
-      currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }
-
-  if (searchQuery.trim() && filteredTasks.length === 0) {
-    emptyMessage = "🔍 No tasks match your search.";
-  }
-
-  if (filter === "active") {
-    filteredTasks = filteredTasks.filter((task) => !task.completed);
-  }
-
-  if (filter === "completed") {
-    filteredTasks = filteredTasks.filter((task) => task.completed);
-  }
-
-  if (filter === "starred") {
-    filteredTasks = filteredTasks.filter((task) => task.starred);
-  }
+    return "🎉 No tasks yet. Add your first task to get started!";
+  }, [searchQuery, filteredTasks]);
 
   // ==================================================
   // Page Routing
@@ -487,12 +482,9 @@ function Dashboard({
           filteredTasks={filteredTasks}
           priority={priority}
           setPriority={setPriority}
-          filter={filter}
           addTask={addTask}
-          deleteTask={deleteTask}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
           notification={notification}
           totalTasks={totalTasks}
@@ -504,9 +496,7 @@ function Dashboard({
           setSearchQuery={setSearchQuery}
           handleKeyDown={handleKeyDown}
           emptyMessage={emptyMessage}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -521,17 +511,12 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
           notification={notification}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -546,16 +531,11 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -570,16 +550,11 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
@@ -595,12 +570,9 @@ function Dashboard({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filteredTasks={filteredTasks}
-          filter={filter}
           emptyMessage={emptyMessage}
           toggleTask={toggleTask}
           toggleStar={toggleStar}
-          deleteTask={deleteTask}
-          handleFilter={handleFilter}
           clearCompletedTasks={clearCompletedTasks}
           task={task}
           setTask={setTask}
@@ -608,9 +580,7 @@ function Dashboard({
           setPriority={setPriority}
           onAddTask={addTask}
           onHandleKeyDown={handleKeyDown}
-          isEditOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
-          editingTask={editingTask}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
           setIsDeleteOpen={setIsDeleteOpen}
