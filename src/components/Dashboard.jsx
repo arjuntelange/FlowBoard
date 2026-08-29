@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Rocket, Star } from "lucide-react";
 import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
@@ -85,47 +91,50 @@ function Dashboard({
   // List Actions
   // ======================
 
-  function handleCreateList(listName) {
-    if (!listName.trim()) {
-      showNotification(
-        "⚠️ Invalid Name",
-        "List name cannot be empty.",
-        "error",
+  const handleCreateList = useCallback(
+    (listName) => {
+      if (!listName.trim()) {
+        showNotification(
+          "⚠️ Invalid Name",
+          "List name cannot be empty.",
+          "error",
+        );
+        return;
+      }
+
+      const duplicate = lists.some(
+        (list) => list.name.toLowerCase() === listName.trim().toLowerCase(),
       );
-      return;
-    }
 
-    const duplicate = lists.some(
-      (list) => list.name.toLowerCase() === listName.trim().toLowerCase(),
-    );
+      if (duplicate) {
+        showNotification(
+          "⚠️ List Already Exists",
+          "Choose a different name.",
+          "error",
+        );
+        return;
+      }
 
-    if (duplicate) {
+      setList((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          name: listName.trim(),
+        },
+      ]);
+
+      setIsInputOpen(false);
+
       showNotification(
-        "⚠️ List Already Exists",
-        "Choose a different name.",
-        "error",
+        "🎉 List Created",
+        "New task list added successfully.",
+        "success",
       );
-      return;
-    }
+    },
+    [lists],
+  );
 
-    setList((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        name: listName.trim(),
-      },
-    ]);
-
-    setIsInputOpen(false);
-
-    showNotification(
-      "🎉 List Created",
-      "New task list added successfully.",
-      "success",
-    );
-  }
-
-  function handleEditList() {
+  const handleEditList = useCallback(() => {
     if (!editingList?.name.trim()) {
       showNotification(
         "⚠️ Invalid List Name",
@@ -169,9 +178,9 @@ function Dashboard({
       "List name updated successfully.",
       "success",
     );
-  }
+  }, [lists, editingList]);
 
-  function handleDeleteList() {
+  const handleDeleteList = useCallback(() => {
     setList(lists.filter((list) => list.id !== listToDelete.id));
 
     setTasks(tasks.filter((task) => task.listId !== listToDelete.id));
@@ -189,13 +198,13 @@ function Dashboard({
       "The list and all its tasks have been removed.",
       "success",
     );
-  }
+  }, [lists, tasks, selectedList, listToDelete]);
 
   // ======================
   // Task Actions
   // ======================
 
-  function addTask() {
+  const addTask = useCallback(() => {
     if (!task.trim()) return;
 
     if (
@@ -244,21 +253,21 @@ function Dashboard({
       "Your task has been added successfully.",
       "success",
     );
-  }
+  }, [task, priority, dueDate, selectedList, tasks]);
 
-  function deleteTask(taskId) {
-    setTasks(tasks.filter((elem) => elem.id !== taskId));
+  const deleteTask = useCallback((taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((elem) => elem.id !== taskId));
 
     showNotification(
       "🗑️ Task Deleted",
       "The task has been removed.",
       "success",
     );
-  }
+  }, []);
 
-  function toggleTask(currentTask) {
-    setTasks(
-      tasks.map((elem) => {
+  const toggleTask = useCallback((currentTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((elem) => {
         if (elem.id === currentTask.id) {
           return { ...elem, completed: !elem.completed };
         }
@@ -276,11 +285,11 @@ function Dashboard({
         "success",
       );
     }
-  }
+  }, []);
 
-  function toggleStar(currentTask) {
-    setTasks(
-      tasks.map((elem) => {
+  const toggleStar = useCallback((currentTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((elem) => {
         if (elem.id === currentTask.id) {
           return { ...elem, starred: !elem.starred };
         }
@@ -288,9 +297,9 @@ function Dashboard({
         return elem;
       }),
     );
-  }
+  }, []);
 
-  function clearCompletedTasks() {
+  const clearCompletedTasks = useCallback(() => {
     const checkTask = tasks.some((taskCheck) => taskCheck.completed);
 
     if (checkTask) {
@@ -308,9 +317,9 @@ function Dashboard({
         "info",
       );
     }
-  }
+  }, [tasks]);
 
-  function updateTask() {
+  const updateTask = useCallback(() => {
     setTasks(
       tasks.map((task) =>
         task.id === editingTask.id
@@ -330,28 +339,31 @@ function Dashboard({
       "Changes saved successfully.",
       "success",
     );
-  }
+  }, [tasks, editingTask, showNotification]);
 
-  function handleDeleteConfirm() {
+  const handleDeleteConfirm = useCallback(() => {
     deleteTask(taskToDelete);
 
     setIsDeleteOpen(false);
     setTaskToDelete(null);
-  }
+  }, [deleteTask, taskToDelete]);
 
   // ==================================================
   // UI Handlers
   // ==================================================
 
-  function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      addTask();
-    }
-  }
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        addTask();
+      }
+    },
+    [addTask],
+  );
 
-  function handleFilter(filterType) {
+  const handleFilter = useCallback((filterType) => {
     setFilter(filterType);
-  }
+  }, []);
 
   function showNotification(title, message, type) {
     setNotification({
@@ -410,31 +422,33 @@ function Dashboard({
   // Filtered Task Data
   // ======================
 
-  let filteredTasks = tasks;
+  const filteredTasks = useMemo(() => {
+    let result = tasks;
+
+    switch (selectedList) {
+      case "starred":
+        result = result.filter((task) => task.starred);
+        break;
+
+      case "dashboard":
+        result = result.filter((task) => !task.completed);
+        break;
+
+      case "completed":
+        result = result.filter((task) => task.completed);
+        break;
+
+      case "all":
+        break;
+
+      default:
+        result = result.filter((task) => task.listId === selectedList.id);
+    }
+
+    return result;
+  }, [tasks, selectedList]);
 
   let emptyMessage = "🎉 No tasks yet. Add your first task to get started!";
-
-  switch (selectedList) {
-    case "starred":
-      filteredTasks = filteredTasks.filter((task) => task.starred);
-      break;
-
-    case "dashboard":
-      filteredTasks = filteredTasks.filter((task) => !task.completed);
-      break;
-
-    case "completed":
-      filteredTasks = filteredTasks.filter((task) => task.completed);
-      break;
-
-    case "all":
-      break;
-
-    default:
-      filteredTasks = filteredTasks.filter(
-        (task) => task.listId === selectedList.id,
-      );
-  }
 
   if (searchQuery.trim()) {
     filteredTasks = filteredTasks.filter((currentTask) =>
