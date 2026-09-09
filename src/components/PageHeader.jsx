@@ -1,4 +1,5 @@
 import "./PageHeader.css";
+import React from "react";
 
 function PageHeader({ title, subtitle, searchQuery, setSearchQuery }) {
   return (
@@ -23,4 +24,4 @@ function PageHeader({ title, subtitle, searchQuery, setSearchQuery }) {
   );
 }
 
-export default PageHeader;
+export default React.memo(PageHeader);

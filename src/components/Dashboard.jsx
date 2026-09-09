@@ -320,7 +320,9 @@ function Dashboard({
     const checkTask = tasks.some((taskCheck) => taskCheck.completed);
 
     if (checkTask) {
-      setTasks(tasks.filter((currentTask) => !currentTask.completed));
+      setTasks((prevTasks) =>
+        prevTasks.filter((currentTask) => !currentTask.completed),
+      );
 
       showNotification(
         "🧹 Tasks Cleared",
@@ -334,11 +336,11 @@ function Dashboard({
         "info",
       );
     }
-  }, [tasks]);
+  }, []);
 
   const updateTask = useCallback(() => {
-    setTasks(
-      tasks.map((task) =>
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
         task.id === editingTask.id
           ? {
               ...task,
@@ -356,7 +358,7 @@ function Dashboard({
       "Changes saved successfully.",
       "success",
     );
-  }, [tasks, editingTask, showNotification]);
+  }, [editingTask, showNotification]);
 
   const handleDeleteConfirm = useCallback(() => {
     deleteTask(taskToDelete);

@@ -6,6 +6,7 @@ import InputSection from "./InputSection";
 import TasksBoard from "./TasksBoard";
 import "./DashboardHome.css";
 import DashboardSidebar from "./DashboardSidebar";
+import React from "react";
 
 function DashboardHome({
   task,
@@ -17,7 +18,6 @@ function DashboardHome({
   setDueDate,
 
   filteredTasks,
-  
   totalTasks,
   completedTasks,
   pendingTasks,
@@ -117,4 +117,4 @@ function DashboardHome({
   );
 }
 
-export default DashboardHome;
+export default React.memo(DashboardHome);

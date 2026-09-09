@@ -1,5 +1,6 @@
 import "./InputSection.css";
 import { ChevronDown, Plus } from "lucide-react";
+import React from "react";
 
 function InputSection({
   task,
@@ -62,4 +63,4 @@ function InputSection({
   );
 }
 
-export default InputSection;
+export default React.memo(InputSection);

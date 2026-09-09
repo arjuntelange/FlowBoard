@@ -1,4 +1,5 @@
 import "./Notification.css";
+import React from "react";
 
 function Notification({ title, message, type }) {
   return (
@@ -9,4 +10,4 @@ function Notification({ title, message, type }) {
   );
 }
 
-export default Notification;
+export default React.memo(Notification);
