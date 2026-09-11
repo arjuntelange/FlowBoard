@@ -10,6 +10,7 @@ import DeleteConfirm from "./DeleteConfirm.jsx";
 import ListInputModal from "./ListInputModal.jsx";
 import ListEditModal from "./ListEditModal.jsx";
 import ListDeleteModal from "./ListDeleteModal.jsx";
+import useNotification from "../hooks/useNotification.js";
 
 function Dashboard({
   lists,
@@ -45,12 +46,6 @@ function Dashboard({
 
   const [filter, setFilter] = useState("all");
 
-  const [notification, setNotification] = useState({
-    title: "",
-    message: "",
-    type: "",
-  });
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -61,11 +56,7 @@ function Dashboard({
 
   const [taskToDelete, setTaskToDelete] = useState(null);
 
-  // ==================================================
-  // Refs
-  // ==================================================
-
-  const timerRef = useRef(null);
+  const [notification, showNotification] = useNotification();
 
   // ======================
   // Effects
@@ -79,30 +70,6 @@ function Dashboard({
     setTask("");
     setPriority("Medium");
   }, [selectedList]);
-
-  // ======================
-  // Notification
-  // ======================
-
-  const showNotification = useCallback((title, message, type) => {
-    setNotification({
-      title: title,
-      message: message,
-      type: type,
-    });
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      setNotification({
-        title: "",
-        message: "",
-        type: "",
-      });
-    }, 2000);
-  }, []);
 
   // ======================
   // List Actions
