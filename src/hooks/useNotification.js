@@ -29,10 +29,10 @@ function useNotification() {
     }, 2000);
   }, []);
 
-  return {
+  return [
     notification,
     showNotification,
-  };
+  ];
 }
 
 export default useNotification;

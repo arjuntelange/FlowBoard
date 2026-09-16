@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
@@ -11,6 +11,7 @@ import ListInputModal from "./ListInputModal.jsx";
 import ListEditModal from "./ListEditModal.jsx";
 import ListDeleteModal from "./ListDeleteModal.jsx";
 import useNotification from "../hooks/useNotification.js";
+import useTasks from "../hooks/useTasks.js";
 
 function Dashboard({
   lists,
@@ -34,12 +35,6 @@ function Dashboard({
 
   const [task, setTask] = useState("");
 
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-
   const [priority, setPriority] = useState("Medium");
 
   const [dueDate, setDueDate] = useState("");
@@ -58,13 +53,12 @@ function Dashboard({
 
   const [notification, showNotification] = useNotification();
 
+  const { tasks, setTasks, deleteTask, toggleTask, toggleStar } =
+    useTasks(showNotification);
+
   // ======================
   // Effects
   // ======================
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
 
   useEffect(() => {
     setTask("");
@@ -115,7 +109,7 @@ function Dashboard({
         "success",
       );
     },
-    [lists],
+    [lists, setList, setIsInputOpen, showNotification],
   );
 
   const handleEditList = useCallback(() => {
@@ -156,18 +150,25 @@ function Dashboard({
 
     setIsListEditOpen(false);
     setEditingList(null);
-
+ 
     showNotification(
       "✏️ List Updated",
       "List name updated successfully.",
       "success",
     );
-  }, [lists, editingList]);
+  }, [
+    lists,
+    editingList,
+    setList,
+    setEditingList,
+    setIsListEditOpen,
+    showNotification,
+  ]);
 
   const handleDeleteList = useCallback(() => {
     setList(lists.filter((list) => list.id !== listToDelete.id));
 
-    setTasks(tasks.filter((task) => task.listId !== listToDelete.id));
+    setTasks((prev) => prev.filter((task) => task.listId !== listToDelete.id));
 
     setIsListDeleteOpen(false);
 
@@ -182,7 +183,16 @@ function Dashboard({
       "The list and all its tasks have been removed.",
       "success",
     );
-  }, [lists, tasks, selectedList, listToDelete]);
+  }, [
+    lists,
+    tasks,
+    selectedList,
+    listToDelete,
+    setTasks,
+    setList,
+    showNotification,
+    setSelectedList,
+  ]);
 
   // ======================
   // Task Actions
@@ -237,51 +247,15 @@ function Dashboard({
       "Your task has been added successfully.",
       "success",
     );
-  }, [task, priority, dueDate, selectedList, tasks]);
-
-  const deleteTask = useCallback((taskId) => {
-    setTasks((prevTasks) => prevTasks.filter((elem) => elem.id !== taskId));
-
-    showNotification(
-      "🗑️ Task Deleted",
-      "The task has been removed.",
-      "success",
-    );
-  }, []);
-
-  const toggleTask = useCallback((currentTask) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((elem) => {
-        if (elem.id === currentTask.id) {
-          return { ...elem, completed: !elem.completed };
-        }
-
-        return elem;
-      }),
-    );
-
-    if (currentTask.completed) {
-      showNotification("↩️ Task Reopened", "The task is active again.", "info");
-    } else {
-      showNotification(
-        "✅ Task Completed",
-        "Great job! Keep going.",
-        "success",
-      );
-    }
-  }, []);
-
-  const toggleStar = useCallback((currentTask) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((elem) => {
-        if (elem.id === currentTask.id) {
-          return { ...elem, starred: !elem.starred };
-        }
-
-        return elem;
-      }),
-    );
-  }, []);
+  }, [
+    task,
+    priority,
+    dueDate,
+    selectedList,
+    tasks,
+    setTasks,
+    showNotification,
+  ]);
 
   const clearCompletedTasks = useCallback(() => {
     const checkTask = tasks.some((taskCheck) => taskCheck.completed);
@@ -303,7 +277,7 @@ function Dashboard({
         "info",
       );
     }
-  }, []);
+  }, [tasks, setTasks, showNotification]);
 
   const updateTask = useCallback(() => {
     setTasks((prevTasks) =>
@@ -325,7 +299,7 @@ function Dashboard({
       "Changes saved successfully.",
       "success",
     );
-  }, [editingTask, showNotification]);
+  }, [editingTask, showNotification, setTasks]);
 
   const handleDeleteConfirm = useCallback(() => {
     deleteTask(taskToDelete);
