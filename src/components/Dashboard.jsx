@@ -12,6 +12,7 @@ import ListEditModal from "./ListEditModal.jsx";
 import ListDeleteModal from "./ListDeleteModal.jsx";
 import useNotification from "../hooks/useNotification.js";
 import useTasks from "../hooks/useTasks.js";
+import useTaskFilters from "../hooks/useTaskFilters.js";
 
 function Dashboard({
   lists,
@@ -39,8 +40,6 @@ function Dashboard({
 
   const [dueDate, setDueDate] = useState("");
 
-  const [filter, setFilter] = useState("all");
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -55,6 +54,12 @@ function Dashboard({
 
   const { tasks, setTasks, deleteTask, toggleTask, toggleStar } =
     useTasks(showNotification);
+
+  const { filteredTasks, emptyMessage } = useTaskFilters(
+    tasks,
+    selectedList,
+    searchQuery,
+  );
 
   // ======================
   // Effects
@@ -150,7 +155,7 @@ function Dashboard({
 
     setIsListEditOpen(false);
     setEditingList(null);
- 
+
     showNotification(
       "✏️ List Updated",
       "List name updated successfully.",
@@ -166,7 +171,7 @@ function Dashboard({
   ]);
 
   const handleDeleteList = useCallback(() => {
-    setList(lists.filter((list) => list.id !== listToDelete.id));
+    setList((prev) => prev.filter((list) => list.id !== listToDelete.id));
 
     setTasks((prev) => prev.filter((task) => task.listId !== listToDelete.id));
 
@@ -185,7 +190,6 @@ function Dashboard({
     );
   }, [
     lists,
-    tasks,
     selectedList,
     listToDelete,
     setTasks,
@@ -357,58 +361,6 @@ function Dashboard({
   // ======================
   // Filtered Task Data
   // ======================
-
-  const filteredTasks = useMemo(() => {
-    let result = tasks;
-
-    switch (selectedList) {
-      case "starred":
-        result = result.filter((task) => task.starred);
-        break;
-
-      case "dashboard":
-        result = result.filter((task) => !task.completed);
-        break;
-
-      case "completed":
-        result = result.filter((task) => task.completed);
-        break;
-
-      case "all":
-        break;
-
-      default:
-        result = result.filter((task) => task.listId === selectedList.id);
-    }
-
-    if (searchQuery.trim()) {
-      result = result.filter((currentTask) =>
-        currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-    }
-
-    if (filter === "active") {
-      result = result.filter((task) => !task.completed);
-    }
-
-    if (filter === "completed") {
-      result = result.filter((task) => task.completed);
-    }
-
-    if (filter === "starred") {
-      result = result.filter((task) => task.starred);
-    }
-
-    return result;
-  }, [tasks, selectedList, searchQuery, filter]);
-
-  const emptyMessage = useMemo(() => {
-    if (searchQuery.trim() && filteredTasks.length === 0) {
-      return "🔍 No tasks match your search.";
-    }
-
-    return "🎉 No tasks yet. Add your first task to get started!";
-  }, [searchQuery, filteredTasks]);
 
   // ==================================================
   // Page Routing

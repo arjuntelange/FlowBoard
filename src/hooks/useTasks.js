@@ -53,7 +53,7 @@ function useTasks(showNotification) {
         return elem;
       }),
     );
-  }, [setTasks]);
+  }, []);
 
   return {
     tasks,
