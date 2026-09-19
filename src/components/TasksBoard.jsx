@@ -145,7 +145,7 @@ function TasksBoard({
     return taskCopy;
   }, [filteredTasks, sortBy]);
 
-  const { activeFilters, statusFilters, priorityFilters, otherFilters } =
+  const { statusFilters, priorityFilters, otherFilters } =
     useMemo(() => {
       const activeFilters = Object.entries(selectedFilters)
         .filter(([, value]) => value)
@@ -167,7 +167,7 @@ function TasksBoard({
           filter === "starred" || filter === "overdue" || filter === "dueToday",
       );
 
-      return { activeFilters, statusFilters, priorityFilters, otherFilters };
+      return { statusFilters, priorityFilters, otherFilters };
     }, [selectedFilters]);
 
   const filteredBySelectedFilters = useMemo(() => {

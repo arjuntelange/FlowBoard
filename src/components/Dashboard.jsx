@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
@@ -10,6 +10,11 @@ import DeleteConfirm from "./DeleteConfirm.jsx";
 import ListInputModal from "./ListInputModal.jsx";
 import ListEditModal from "./ListEditModal.jsx";
 import ListDeleteModal from "./ListDeleteModal.jsx";
+import useNotification from "../hooks/useNotification.js";
+import useTasksManager from "../hooks/useTasksManager.js";
+import useTaskFilters from "../hooks/useTaskFilters.js";
+import useDashboardStats from "../hooks/useDashboardStats.js";
+import useListActions from "../hooks/useListActions.js";
 
 function Dashboard({
   lists,
@@ -27,362 +32,39 @@ function Dashboard({
   listToDelete,
   setListToDelete,
 }) {
-  // ======================
-  // State
-  // ======================
-
-  const [task, setTask] = useState("");
-
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-
-  const [priority, setPriority] = useState("Medium");
-
-  const [dueDate, setDueDate] = useState("");
-
-  const [filter, setFilter] = useState("all");
-
-  const [notification, setNotification] = useState({
-    title: "",
-    message: "",
-    type: "",
-  });
-
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [notification, showNotification] = useNotification();
 
-  const [editingTask, setEditingTask] = useState("");
+  const {
+    tasks,
+    task,
+    editingTask,
+    isEditOpen,
+    isDeleteOpen,
+    priority,
+    setTasks,
+    setTask,
+    setEditingTask,
+    setIsEditOpen,
+    setIsDeleteOpen,
+    setTaskToDelete,
+    addTask,
+    handleKeyDown,
+    updateTask,
+    handleDeleteConfirm,
+    toggleTask,
+    toggleStar,
+    clearCompletedTasks,
+    setPriority,
+    setDueDate,
+  } = useTasksManager(showNotification, selectedList);
 
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
-  const [taskToDelete, setTaskToDelete] = useState(null);
-
-  // ==================================================
-  // Refs
-  // ==================================================
-
-  const timerRef = useRef(null);
-
-  // ======================
-  // Effects
-  // ======================
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  useEffect(() => {
-    setTask("");
-    setPriority("Medium");
-  }, [selectedList]);
-
-  // ======================
-  // Notification
-  // ======================
-
-  const showNotification = useCallback((title, message, type) => {
-    setNotification({
-      title: title,
-      message: message,
-      type: type,
-    });
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      setNotification({
-        title: "",
-        message: "",
-        type: "",
-      });
-    }, 2000);
-  }, []);
-
-  // ======================
-  // List Actions
-  // ======================
-
-  const handleCreateList = useCallback(
-    (listName) => {
-      if (!listName.trim()) {
-        showNotification(
-          "⚠️ Invalid Name",
-          "List name cannot be empty.",
-          "error",
-        );
-        return;
-      }
-
-      const duplicate = lists.some(
-        (list) => list.name.toLowerCase() === listName.trim().toLowerCase(),
-      );
-
-      if (duplicate) {
-        showNotification(
-          "⚠️ List Already Exists",
-          "Choose a different name.",
-          "error",
-        );
-        return;
-      }
-
-      setList((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          name: listName.trim(),
-        },
-      ]);
-
-      setIsInputOpen(false);
-
-      showNotification(
-        "🎉 List Created",
-        "New task list added successfully.",
-        "success",
-      );
-    },
-    [lists],
+  const { filteredTasks, emptyMessage } = useTaskFilters(
+    tasks,
+    selectedList,
+    searchQuery,
   );
-
-  const handleEditList = useCallback(() => {
-    if (!editingList?.name.trim()) {
-      showNotification(
-        "⚠️ Invalid List Name",
-        "List name cannot be empty.",
-        "error",
-      );
-
-      return;
-    }
-
-    const duplicate = lists.some(
-      (list) =>
-        list.id !== editingList.id &&
-        list.name.trim().toLowerCase() ===
-          editingList.name.trim().toLowerCase(),
-    );
-
-    if (duplicate) {
-      showNotification(
-        "⚠️ List Already Exists",
-        "Choose a different name.",
-        "error",
-      );
-
-      return;
-    }
-
-    setList((prevList) =>
-      prevList.map((list) =>
-        list.id === editingList.id
-          ? { ...list, name: editingList.name.trim() }
-          : list,
-      ),
-    );
-
-    setIsListEditOpen(false);
-    setEditingList(null);
-
-    showNotification(
-      "✏️ List Updated",
-      "List name updated successfully.",
-      "success",
-    );
-  }, [lists, editingList]);
-
-  const handleDeleteList = useCallback(() => {
-    setList(lists.filter((list) => list.id !== listToDelete.id));
-
-    setTasks(tasks.filter((task) => task.listId !== listToDelete.id));
-
-    setIsListDeleteOpen(false);
-
-    setListToDelete(null);
-
-    if (selectedList.id === listToDelete.id) {
-      setSelectedList("dashboard");
-    }
-
-    showNotification(
-      "🗑️ List Deleted",
-      "The list and all its tasks have been removed.",
-      "success",
-    );
-  }, [lists, tasks, selectedList, listToDelete]);
-
-  // ======================
-  // Task Actions
-  // ======================
-
-  const addTask = useCallback(() => {
-    if (!task.trim()) return;
-
-    if (
-      selectedList === "all" ||
-      selectedList === "starred" ||
-      selectedList === "dashboard" ||
-      selectedList === "completed"
-    ) {
-      showNotification(
-        "📂 Select a List",
-        "Please choose a task list before adding tasks.",
-        "info",
-      );
-
-      return;
-    }
-
-    const check = tasks.some(
-      (elem) => elem.text.toLowerCase() === task.trim().toLowerCase(),
-    );
-    if (check) {
-      showNotification(
-        "⚠️ Task Already Exists",
-        "Try adding a different task.",
-        "error",
-      );
-      return;
-    }
-
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      {
-        id: Date.now(),
-        text: task,
-        completed: false,
-        priority: priority,
-        listId: selectedList.id,
-        starred: false,
-        dueDate: dueDate,
-      },
-    ]);
-    setTask("");
-
-    showNotification(
-      "🎉 Task Added",
-      "Your task has been added successfully.",
-      "success",
-    );
-  }, [task, priority, dueDate, selectedList, tasks]);
-
-  const deleteTask = useCallback((taskId) => {
-    setTasks((prevTasks) => prevTasks.filter((elem) => elem.id !== taskId));
-
-    showNotification(
-      "🗑️ Task Deleted",
-      "The task has been removed.",
-      "success",
-    );
-  }, []);
-
-  const toggleTask = useCallback((currentTask) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((elem) => {
-        if (elem.id === currentTask.id) {
-          return { ...elem, completed: !elem.completed };
-        }
-
-        return elem;
-      }),
-    );
-
-    if (currentTask.completed) {
-      showNotification("↩️ Task Reopened", "The task is active again.", "info");
-    } else {
-      showNotification(
-        "✅ Task Completed",
-        "Great job! Keep going.",
-        "success",
-      );
-    }
-  }, []);
-
-  const toggleStar = useCallback((currentTask) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((elem) => {
-        if (elem.id === currentTask.id) {
-          return { ...elem, starred: !elem.starred };
-        }
-
-        return elem;
-      }),
-    );
-  }, []);
-
-  const clearCompletedTasks = useCallback(() => {
-    const checkTask = tasks.some((taskCheck) => taskCheck.completed);
-
-    if (checkTask) {
-      setTasks((prevTasks) =>
-        prevTasks.filter((currentTask) => !currentTask.completed),
-      );
-
-      showNotification(
-        "🧹 Tasks Cleared",
-        "All completed tasks have been removed.",
-        "success",
-      );
-    } else {
-      showNotification(
-        "ℹ️ Nothing to Clear",
-        "There are no completed tasks to remove.",
-        "info",
-      );
-    }
-  }, []);
-
-  const updateTask = useCallback(() => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === editingTask.id
-          ? {
-              ...task,
-              text: editingTask.text,
-              priority: editingTask.priority,
-            }
-          : task,
-      ),
-    );
-
-    setIsEditOpen(false);
-
-    showNotification(
-      "✏️ Task Updated",
-      "Changes saved successfully.",
-      "success",
-    );
-  }, [editingTask, showNotification]);
-
-  const handleDeleteConfirm = useCallback(() => {
-    deleteTask(taskToDelete);
-
-    setIsDeleteOpen(false);
-    setTaskToDelete(null);
-  }, [deleteTask, taskToDelete]);
-
-  // ==================================================
-  // UI Handlers
-  // ==================================================
-
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === "Enter") {
-        addTask();
-      }
-    },
-    [addTask],
-  );
-
-  // ======================
-  // Dashboard Statistics
-  // ======================
 
   const {
     totalTasks,
@@ -390,84 +72,23 @@ function Dashboard({
     pendingTasks,
     highPriorityTasks,
     completionRate,
-  } = useMemo(() => {
-    const totalTasks = tasks.length;
+  } = useDashboardStats(tasks, selectedList);
 
-    const completedTasks = tasks.filter((task) => task.completed).length;
-
-    const pendingTasks = tasks.length - completedTasks;
-
-    const highPriorityTasks = tasks.filter(
-      (task) => task.priority === "High",
-    ).length;
-
-    const completionRate =
-      totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-    return {
-      totalTasks,
-      completedTasks,
-      pendingTasks,
-      highPriorityTasks,
-      completionRate,
-    };
-  }, [tasks]);
-
-  // ======================
-  // Filtered Task Data
-  // ======================
-
-  const filteredTasks = useMemo(() => {
-    let result = tasks;
-
-    switch (selectedList) {
-      case "starred":
-        result = result.filter((task) => task.starred);
-        break;
-
-      case "dashboard":
-        result = result.filter((task) => !task.completed);
-        break;
-
-      case "completed":
-        result = result.filter((task) => task.completed);
-        break;
-
-      case "all":
-        break;
-
-      default:
-        result = result.filter((task) => task.listId === selectedList.id);
-    }
-
-    if (searchQuery.trim()) {
-      result = result.filter((currentTask) =>
-        currentTask.text.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-    }
-
-    if (filter === "active") {
-      result = result.filter((task) => !task.completed);
-    }
-
-    if (filter === "completed") {
-      result = result.filter((task) => task.completed);
-    }
-
-    if (filter === "starred") {
-      result = result.filter((task) => task.starred);
-    }
-
-    return result;
-  }, [tasks, selectedList, searchQuery, filter]);
-
-  const emptyMessage = useMemo(() => {
-    if (searchQuery.trim() && filteredTasks.length === 0) {
-      return "🔍 No tasks match your search.";
-    }
-
-    return "🎉 No tasks yet. Add your first task to get started!";
-  }, [searchQuery, filteredTasks]);
+  const { handleCreateList, handleEditList, handleDeleteList } = useListActions(
+    showNotification,
+    selectedList,
+    listToDelete,
+    lists,
+    setList,
+    setIsInputOpen,
+    editingList,
+    setIsListEditOpen,
+    setEditingList,
+    setTasks,
+    setIsListDeleteOpen,
+    setListToDelete,
+    setSelectedList,
+  );
 
   // ==================================================
   // Page Routing
