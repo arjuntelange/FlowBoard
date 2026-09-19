@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
@@ -11,8 +11,9 @@ import ListInputModal from "./ListInputModal.jsx";
 import ListEditModal from "./ListEditModal.jsx";
 import ListDeleteModal from "./ListDeleteModal.jsx";
 import useNotification from "../hooks/useNotification.js";
-import useTasks from "../hooks/useTasks.js";
+import useTasksManager from "../hooks/useTasksManager.js";
 import useTaskFilters from "../hooks/useTaskFilters.js";
+import useDashboardStats from "../hooks/useDashboardStats.js";
 
 function Dashboard({
   lists,
@@ -34,26 +35,36 @@ function Dashboard({
   // State
   // ======================
 
-  const [task, setTask] = useState("");
-
-  const [priority, setPriority] = useState("Medium");
-
-  const [dueDate, setDueDate] = useState("");
-
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [isEditOpen, setIsEditOpen] = useState(false);
-
-  const [editingTask, setEditingTask] = useState("");
-
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
-  const [taskToDelete, setTaskToDelete] = useState(null);
 
   const [notification, showNotification] = useNotification();
 
-  const { tasks, setTasks, deleteTask, toggleTask, toggleStar } =
-    useTasks(showNotification);
+  const {
+    tasks,
+    task,
+    editingTask,
+    isEditOpen,
+    isDeleteOpen,
+    taskToDelete,
+    priority,
+    dueDate,
+    setTasks,
+    setTask,
+    setEditingTask,
+    setIsEditOpen,
+    setIsDeleteOpen,
+    setTaskToDelete,
+    addTask,
+    handleKeyDown,
+    deleteTask,
+    updateTask,
+    handleDeleteConfirm,
+    toggleTask,
+    toggleStar,
+    clearCompletedTasks,
+    setPriority,
+    setDueDate,
+  } = useTasksManager(showNotification, selectedList);
 
   const { filteredTasks, emptyMessage } = useTaskFilters(
     tasks,
@@ -61,14 +72,13 @@ function Dashboard({
     searchQuery,
   );
 
-  // ======================
-  // Effects
-  // ======================
-
-  useEffect(() => {
-    setTask("");
-    setPriority("Medium");
-  }, [selectedList]);
+  const {
+    totalTasks,
+    completedTasks,
+    pendingTasks,
+    highPriorityTasks,
+    completionRate,
+  } = useDashboardStats(tasks, selectedList);
 
   // ======================
   // List Actions
@@ -198,169 +208,11 @@ function Dashboard({
     setSelectedList,
   ]);
 
-  // ======================
-  // Task Actions
-  // ======================
-
-  const addTask = useCallback(() => {
-    if (!task.trim()) return;
-
-    if (
-      selectedList === "all" ||
-      selectedList === "starred" ||
-      selectedList === "dashboard" ||
-      selectedList === "completed"
-    ) {
-      showNotification(
-        "📂 Select a List",
-        "Please choose a task list before adding tasks.",
-        "info",
-      );
-
-      return;
-    }
-
-    const check = tasks.some(
-      (elem) => elem.text.toLowerCase() === task.trim().toLowerCase(),
-    );
-    if (check) {
-      showNotification(
-        "⚠️ Task Already Exists",
-        "Try adding a different task.",
-        "error",
-      );
-      return;
-    }
-
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      {
-        id: Date.now(),
-        text: task,
-        completed: false,
-        priority: priority,
-        listId: selectedList.id,
-        starred: false,
-        dueDate: dueDate,
-      },
-    ]);
-    setTask("");
-
-    showNotification(
-      "🎉 Task Added",
-      "Your task has been added successfully.",
-      "success",
-    );
-  }, [
-    task,
-    priority,
-    dueDate,
-    selectedList,
-    tasks,
-    setTasks,
-    showNotification,
-  ]);
-
-  const clearCompletedTasks = useCallback(() => {
-    const checkTask = tasks.some((taskCheck) => taskCheck.completed);
-
-    if (checkTask) {
-      setTasks((prevTasks) =>
-        prevTasks.filter((currentTask) => !currentTask.completed),
-      );
-
-      showNotification(
-        "🧹 Tasks Cleared",
-        "All completed tasks have been removed.",
-        "success",
-      );
-    } else {
-      showNotification(
-        "ℹ️ Nothing to Clear",
-        "There are no completed tasks to remove.",
-        "info",
-      );
-    }
-  }, [tasks, setTasks, showNotification]);
-
-  const updateTask = useCallback(() => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === editingTask.id
-          ? {
-              ...task,
-              text: editingTask.text,
-              priority: editingTask.priority,
-            }
-          : task,
-      ),
-    );
-
-    setIsEditOpen(false);
-
-    showNotification(
-      "✏️ Task Updated",
-      "Changes saved successfully.",
-      "success",
-    );
-  }, [editingTask, showNotification, setTasks]);
-
-  const handleDeleteConfirm = useCallback(() => {
-    deleteTask(taskToDelete);
-
-    setIsDeleteOpen(false);
-    setTaskToDelete(null);
-  }, [deleteTask, taskToDelete]);
-
   // ==================================================
   // UI Handlers
   // ==================================================
 
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === "Enter") {
-        addTask();
-      }
-    },
-    [addTask],
-  );
-
-  // ======================
-  // Dashboard Statistics
-  // ======================
-
-  const {
-    totalTasks,
-    completedTasks,
-    pendingTasks,
-    highPriorityTasks,
-    completionRate,
-  } = useMemo(() => {
-    const totalTasks = tasks.length;
-
-    const completedTasks = tasks.filter((task) => task.completed).length;
-
-    const pendingTasks = tasks.length - completedTasks;
-
-    const highPriorityTasks = tasks.filter(
-      (task) => task.priority === "High",
-    ).length;
-
-    const completionRate =
-      totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-    return {
-      totalTasks,
-      completedTasks,
-      pendingTasks,
-      highPriorityTasks,
-      completionRate,
-    };
-  }, [tasks]);
-
-  // ======================
-  // Filtered Task Data
-  // ======================
+  
 
   // ==================================================
   // Page Routing
