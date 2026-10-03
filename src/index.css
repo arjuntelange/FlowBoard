@@ -1,98 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  /* =========================
-     FlowBoard Brand Colors
-     ========================= */
+  /* FlowBoard Brand Colors */
 
   --color-flowboard-purple: #3a0ca3;
   --color-flowboard-yellow: #fff275;
 
-  /* =========================
-     Layout
-     ========================= */
+  /* Layout */
 
   --color-background: #f8f9fc;
   --color-surface: #ffffff;
   --color-border: #e5e7eb;
 
-  /* =========================
-     Typography
-     ========================= */
+  /* Typography */
 
   --color-text-primary: #1e1e2f;
   --color-text-secondary: #64748b;
   --color-text-muted: #94a3b8;
 
-  /* =========================
-     Interactive States
-     ========================= */
+  /* Interactive States */
 
   --color-hover: #f1f5f9;
   --color-focus: #c4b5fd;
 
-  /* =========================
-     Status Colors
-     ========================= */
+  /* Status Colors */
 
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #3b82f6;
 
-  /* =========================
-     Priority Colors
-     ========================= */
+  /* Priority Colors */
 
   --color-priority-high: #ef4444;
   --color-priority-medium: #f59e0b;
   --color-priority-low: #22c55e;
 
-  /* =========================
-     Shadows
-     ========================= */
+  /* Shadows */
 
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
 
   --shadow-card-hover: 0 8px 24px rgba(58, 12, 163, 0.12);
 
-  /* =========================
-     Radius
-     ========================= */
+  /* Radius */
 
   --radius-card: 1rem;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-
   &::-webkit-scrollbar {
     display: none;
   }
   scroll-behavior: smooth;
 }
 
-/* body {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-
-  background: #f3f4f6;
-} */
-
 body {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-
-  background-color: var(--color-app-bg);
-  color: var(--color-app-text);
-}
-
-#root {
-  width: 100%;
+  background: var(--color-app-bg);
+  color: var(--color-text-primary);
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
 }
