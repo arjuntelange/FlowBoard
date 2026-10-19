@@ -44,7 +44,7 @@ function DashboardHome({
   setIsDeleteOpen,
 }) {
   return (
-    <div className="container">
+    <div className="w-full h-full bg-app-bg rounded-card">
       <div className="hero-banner">
         <img src={heroBg} alt="Hero Banner" />
 
@@ -66,7 +66,7 @@ function DashboardHome({
         </div>
       </div>
 
-      <div className="dashboard-content">
+      <div className="flex gap-6">
         <div className="main-content">
           <StatsCards
             totalTasks={totalTasks}

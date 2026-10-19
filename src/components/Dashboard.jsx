@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
 import ImportantTasksPage from "./ImportantTasksPage";
@@ -89,10 +88,6 @@ function Dashboard({
     setListToDelete,
     setSelectedList,
   );
-
-  // ==================================================
-  // Page Routing
-  // ==================================================
 
   let content;
 
@@ -212,12 +207,9 @@ function Dashboard({
       );
   }
 
-  // ==================================================
-  // Render
-  // ==================================================
   return (
     <>
-      <main className="dashboard">{content}</main>
+      <main className="min-w-0 flex-1 overflow-y-auto">{content}</main>
 
       <EditTaskModal
         isOpen={isEditOpen}

@@ -1,50 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* FlowBoard Brand Colors */
+  --color-brand-primary: #3A0CA3;
+  --color-brand-deep: #24104F;
+  --color-brand-hover: #4C1D95;
+  --color-brand-secondary: #5B21B6;
+  --color-brand-lavender: #A78BFA;
+  --color-brand-surface: #F4F0FF;
+  --color-brand-accent: #FFF275;
 
-  --color-flowboard-purple: #3a0ca3;
-  --color-flowboard-yellow: #fff275;
+  --color-app-bg: #F8F7FC;
+  --color-app-card: #FFFFFF;
+  --color-app-text: #25213A;
+  --color-app-text-muted: #6B667A;
+  --color-app-border: #E7E0F0;
 
-  /* Layout */
-
-  --color-background: #f8f9fc;
-  --color-surface: #ffffff;
-  --color-border: #e5e7eb;
-
-  /* Typography */
-
-  --color-text-primary: #1e1e2f;
-  --color-text-secondary: #64748b;
-  --color-text-muted: #94a3b8;
-
-  /* Interactive States */
-
-  --color-hover: #f1f5f9;
-  --color-focus: #c4b5fd;
-
-  /* Status Colors */
-
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
-
-  /* Priority Colors */
-
-  --color-priority-high: #ef4444;
-  --color-priority-medium: #f59e0b;
-  --color-priority-low: #22c55e;
-
-  /* Shadows */
-
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
-
-  --shadow-card-hover: 0 8px 24px rgba(58, 12, 163, 0.12);
-
-  /* Radius */
-
-  --radius-card: 1rem;
+  --color-app-success: #15803D;
+  --color-app-warning: #B45309;
+  --color-app-error: #DC2626;
 }
 
 * {

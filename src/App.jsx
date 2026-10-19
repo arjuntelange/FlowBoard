@@ -27,7 +27,7 @@ function App() {
 
   return (
     <>
-      <div className="relative flex min-h-screen">
+      <div className="relative flex h-screen overflow-hidden">
         <Sidebar
           lists={lists}
           selectedList={selectedList}
