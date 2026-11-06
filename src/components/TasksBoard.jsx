@@ -20,6 +20,7 @@ function TasksBoard({
   toggleTask,
   toggleStar,
   clearCompletedTasks,
+  notification,
   setIsEditOpen,
   setEditingTask,
   setTaskToDelete,

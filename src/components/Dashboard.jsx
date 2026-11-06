@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
+import Notification from "./Notification.jsx";
 import ImportantTasksPage from "./ImportantTasksPage";
 import CompletedTasksPage from "./CompletedTasksPage";
 import ListPage from "./ListPage.jsx";
@@ -153,6 +154,7 @@ function Dashboard({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           setIsEditOpen={setIsEditOpen}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
@@ -172,6 +174,7 @@ function Dashboard({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           setIsEditOpen={setIsEditOpen}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
@@ -192,6 +195,7 @@ function Dashboard({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           task={task}
           setTask={setTask}
           priority={priority}
@@ -210,6 +214,14 @@ function Dashboard({
   return (
     <>
       <main className="min-w-0 flex-1 overflow-y-auto">{content}</main>
+
+      {notification.message && (
+        <Notification
+          title={notification.title}
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
 
       <EditTaskModal
         isOpen={isEditOpen}

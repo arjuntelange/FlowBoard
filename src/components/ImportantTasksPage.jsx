@@ -12,6 +12,7 @@ function ImportantTasksPage({
   toggleTask,
   toggleStar,
   clearCompletedTasks,
+  notification,
   setIsEditOpen,
   setEditingTask,
   setTaskToDelete,
@@ -33,6 +34,7 @@ function ImportantTasksPage({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           setIsEditOpen={setIsEditOpen}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}

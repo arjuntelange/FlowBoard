@@ -19,7 +19,7 @@ function useListActions(
     (listName) => {
       if (!listName.trim()) {
         showNotification(
-          "⚠️ Invalid Name",
+          "⚠️ Invalid List Name",
           "List name cannot be empty.",
           "error",
         );

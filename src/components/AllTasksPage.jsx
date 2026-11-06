@@ -3,7 +3,6 @@ import "./AllTasksPage.css";
 import PageHeader from "./PageHeader";
 import TasksBoard from "./TasksBoard";
 import TaskCard from "./TaskCard";
-import Notification from "./Notification";
 
 function AllTasksPage({
   searchQuery,
@@ -41,14 +40,6 @@ function AllTasksPage({
           setIsDeleteOpen={setIsDeleteOpen}
         />
       </TaskCard>
-
-      {notification.message && (
-        <Notification
-          title={notification.title}
-          message={notification.message}
-          type={notification.type}
-        />
-      )}
     </div>
   );
 }

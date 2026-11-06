@@ -23,12 +23,12 @@ function Sidebar({
   return (
     <aside className="flex h-screen w-72 shrink-0 flex-col overflow-hidden bg-brand-deep px-5 py-6 shadow-lg">
       <div className="mb-8">
-        <h2 className="flex items-center gap-3 text-3xl font-extrabold text-white">
+        <h2 className="flex items-center gap-3 text-[2rem] text-shadow-lg font-extrabold text-white">
           <Rocket size={28} />
           FlowBoard
         </h2>
 
-        <p className="mt-2 text-sm text-white/70">
+        <p className="mt-2 text-sm text-white/70 text-shadow-md">
           Organize. Prioritize. Achieve.
         </p>
       </div>

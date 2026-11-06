@@ -26,7 +26,7 @@ function useNotification() {
         message: "",
         type: "",
       });
-    }, 2000);
+    }, 3500);
   }, []);
 
   return [
