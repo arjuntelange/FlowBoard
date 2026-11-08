@@ -1,4 +1,4 @@
-import "./EditTaskModal.css";
+import { Pencil, X } from "lucide-react";
 
 function EditTaskModal({
   isOpen,
@@ -10,44 +10,87 @@ function EditTaskModal({
   if (!isOpen) return null;
 
   return (
-    <div className="edit-overlay" onClick={onClose}>
-      <div className="edit-modal" onClick={(e) => e.stopPropagation()}>
-        <h2>Edit Task</h2>
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-brand-deep/40 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl border border-app-border bg-app-card p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-surface text-brand-primary">
+              <Pencil size={20} />
+            </div>
 
-        <input
-          type="text"
-          value={editingTask.text}
-          onChange={(e) =>
-            setEditingTask({
-              ...editingTask,
-              text: e.target.value,
-            })
-          }
-          className="edit-input"
-        />
+            <h2 className="text-xl font-bold text-app-text">
+              Edit Task
+            </h2>
+          </div>
 
-        <select
-          value={editingTask.priority}
-          onChange={(e) =>
-            setEditingTask({
-              ...editingTask,
-              priority: e.target.value,
-            })
-          }
-          className="edit-select"
-        >
-          <option value="Low">🟢 Low</option>
-          <option value="Medium">🟡 Medium</option>
-          <option value="High">🔴 High</option>
-        </select>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-2 text-app-text-muted transition hover:bg-brand-surface hover:text-brand-primary"
+          >
+            <X size={19} />
+          </button>
+        </div>
 
-        <div className="edit-actions">
-          <button className="cancel-btn" onClick={onClose}>
+        <div className="space-y-4">
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-app-text">
+              Task Name
+            </label>
+
+            <input
+              type="text"
+              value={editingTask.text}
+              onChange={(e) =>
+                setEditingTask({
+                  ...editingTask,
+                  text: e.target.value,
+                })
+              }
+              className="w-full rounded-xl border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text outline-none transition focus:border-brand-lavender focus:ring-4 focus:ring-brand-primary/10"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-app-text">
+              Priority
+            </label>
+
+            <select
+              value={editingTask.priority}
+              onChange={(e) =>
+                setEditingTask({
+                  ...editingTask,
+                  priority: e.target.value,
+                })
+              }
+              className="w-full rounded-xl border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text outline-none focus:border-brand-lavender focus:ring-4 focus:ring-brand-primary/10"
+            >
+              <option value="Low">🟢 Low</option>
+              <option value="Medium">🟡 Medium</option>
+              <option value="High">🔴 High</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-7 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-sm font-semibold text-app-text transition hover:bg-brand-surface"
+          >
             Cancel
           </button>
 
-          <button className="save-btn" onClick={onSave}>
-            Save
+          <button
+            onClick={onSave}
+            className="flex-1 rounded-xl bg-brand-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-hover active:scale-[0.98]"
+          >
+            Save Changes
           </button>
         </div>
       </div>

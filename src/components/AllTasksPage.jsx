@@ -1,5 +1,4 @@
 import React from "react";
-import "./AllTasksPage.css";
 import PageHeader from "./PageHeader";
 import TasksBoard from "./TasksBoard";
 import TaskCard from "./TaskCard";
@@ -19,27 +18,31 @@ function AllTasksPage({
   notification,
 }) {
   return (
-    <div className="all-tasks-page">
+    <div className="min-h-full w-full bg-app-bg">
+
       <PageHeader
         title="All Tasks"
-        subtitle="Manage and organize all your tasks"
+        subtitle="Manage and organize all your tasks."
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
 
-      <TaskCard>
-        <TasksBoard
-          filteredTasks={filteredTasks}
-          emptyMessage={emptyMessage}
-          toggleTask={toggleTask}
-          toggleStar={toggleStar}
-          clearCompletedTasks={clearCompletedTasks}
-          setIsEditOpen={setIsEditOpen}
-          setEditingTask={setEditingTask}
-          setTaskToDelete={setTaskToDelete}
-          setIsDeleteOpen={setIsDeleteOpen}
-        />
-      </TaskCard>
+      <div className="px-8 py-6">
+        <TaskCard>
+          <TasksBoard
+            filteredTasks={filteredTasks}
+            emptyMessage={emptyMessage}
+            toggleTask={toggleTask}
+            toggleStar={toggleStar}
+            clearCompletedTasks={clearCompletedTasks}
+            setIsEditOpen={setIsEditOpen}
+            setEditingTask={setEditingTask}
+            setTaskToDelete={setTaskToDelete}
+            setIsDeleteOpen={setIsDeleteOpen}
+          />
+        </TaskCard>
+      </div>
+
     </div>
   );
 }

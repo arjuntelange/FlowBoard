@@ -29,7 +29,7 @@
 
 body {
   background: var(--color-app-bg);
-  color: var(--color-text-primary);
+  color: var(--color-app-text);
   font-family:
     Inter,
     system-ui,

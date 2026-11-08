@@ -25,8 +25,6 @@ const notificationStyles = {
 function Notification({ title, message, type }) {
   const styles = notificationStyles[type] || notificationStyles.info;
 
-  console.log(`Type: ${type}, \nMessage: ${message}, \nTitle: ${title}`);
-
   return (
     <div
       className={`fixed right-6 top-6 w-80 max-w-[calc(100vw-3rem)] py-4 px-5 z-[1001] rounded-2xl border border-app-border border-l-4 bg-app-card shadow-xl animate-[slideIn_0.3s_ease] ${styles.border}`}
