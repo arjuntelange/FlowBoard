@@ -1,11 +1,16 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
-import { useState } from "react";
-import "./TasksBoard.css";
 import {
   Star,
   MoreVertical,
   ChevronDown,
+  ListFilter,
+  CalendarDays,
+  ArrowUpDown,
+  CheckCircle2,
+  Trash2,
+  SlidersHorizontal,
+  X,
 } from "lucide-react";
 
 const priorityOrder = {
@@ -26,9 +31,7 @@ function TasksBoard({
   setIsDeleteOpen,
 }) {
   const [openMenu, setOpenMenu] = useState(null);
-
   const [sortBy, setSortBy] = useState("default");
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedFilters, setSelectedFilters] = useState({
@@ -99,7 +102,8 @@ function TasksBoard({
           if (!a.dueDate) return 1;
           if (!b.dueDate) return -1;
           return (
-            moment(a.dueDate, "DD-MM-YYYY") - moment(b.dueDate, "DD-MM-YYYY")
+            moment(a.dueDate, "DD-MM-YYYY") -
+            moment(b.dueDate, "DD-MM-YYYY")
           );
         });
         break;
@@ -109,20 +113,21 @@ function TasksBoard({
           if (!a.dueDate) return 1;
           if (!b.dueDate) return -1;
           return (
-            moment(b.dueDate, "DD-MM-YYYY") - moment(a.dueDate, "DD-MM-YYYY")
+            moment(b.dueDate, "DD-MM-YYYY") -
+            moment(a.dueDate, "DD-MM-YYYY")
           );
         });
         break;
 
       case "priority-asc":
         taskCopy.sort(
-          (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+          (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
         );
         break;
 
       case "priority-desc":
         taskCopy.sort(
-          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority],
+          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]
         );
         break;
 
@@ -152,19 +157,21 @@ function TasksBoard({
         .map(([key]) => key);
 
       const statusFilters = activeFilters.filter(
-        (filter) => filter === "active" || filter === "completed",
+        (filter) => filter === "active" || filter === "completed"
       );
 
       const priorityFilters = activeFilters.filter(
         (filter) =>
           filter === "highPriority" ||
           filter === "mediumPriority" ||
-          filter === "lowPriority",
+          filter === "lowPriority"
       );
 
       const otherFilters = activeFilters.filter(
         (filter) =>
-          filter === "starred" || filter === "overdue" || filter === "dueToday",
+          filter === "starred" ||
+          filter === "overdue" ||
+          filter === "dueToday"
       );
 
       return { statusFilters, priorityFilters, otherFilters };
@@ -233,10 +240,40 @@ function TasksBoard({
     });
   }, [processedTasks, priorityFilters, statusFilters, otherFilters]);
 
+  const activeFilterCount = Object.values(selectedFilters).filter(Boolean).length;
+
+  const priorityStyles = {
+    High: "bg-app-error/10 text-app-error",
+    Medium: "bg-app-warning/10 text-app-warning",
+    Low: "bg-app-success/10 text-app-success",
+  };
+
   return (
-    <section className="tasks-container">
-      <div className="filter-section">
-        <div className="sort-dropdown">
+    <section className="w-full rounded-2xl border border-app-border bg-app-card p-4 shadow-sm sm:p-5">
+
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-bold text-app-text">
+            Your Tasks
+          </h3>
+          <p className="mt-1 text-sm text-app-text-muted">
+            Stay organized and keep making progress.
+          </p>
+        </div>
+
+        <span className="rounded-full bg-brand-surface px-3 py-1.5 text-xs font-semibold text-brand-primary">
+          {filteredTasks.length} Tasks
+        </span>
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+
+        <div className="relative flex-1 sm:max-w-56">
+          <ArrowUpDown
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-app-text-muted"
+          />
+
           <select
             value={sortBy}
             onClick={() => {
@@ -247,6 +284,7 @@ function TasksBoard({
             onChange={(e) => {
               setSortBy(e.target.value);
             }}
+            className="w-full appearance-none rounded-xl border border-app-border bg-app-card py-2.5 pl-10 pr-9 text-sm font-medium text-app-text outline-none transition-all hover:border-brand-lavender focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15"
           >
             <option value="" disabled>
               Sort By
@@ -261,101 +299,135 @@ function TasksBoard({
             <option value="za">Z → A</option>
           </select>
 
-          <ChevronDown className="sort-icon" size={16} />
+          <ChevronDown
+            size={16}
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-app-text-muted"
+          />
         </div>
 
-        <div className="filter-dropdown" ref={filterRef}>
+        <div className="relative" ref={filterRef}>
           <button
-            className="filter-btn"
+            className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all ${
+              isFilterOpen || activeFilterCount > 0
+                ? "border-brand-primary bg-brand-surface text-brand-primary"
+                : "border-app-border bg-app-card text-app-text hover:border-brand-lavender"
+            }`}
             onClick={(e) => {
               e.stopPropagation();
               setIsFilterOpen(!isFilterOpen);
             }}
           >
-            Filter <ChevronDown size={16} />
+            <ListFilter size={16} />
+            Filter
+
+            {activeFilterCount > 0 && (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-primary px-1 text-[10px] font-bold text-white">
+                {activeFilterCount}
+              </span>
+            )}
+
+            <ChevronDown
+              size={15}
+              className={`transition-transform ${isFilterOpen ? "rotate-180" : ""}`}
+            />
           </button>
 
           {isFilterOpen && (
-            <div className="filter-menu">
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("active")}
-                  checked={selectedFilters.active}
-                />
-                Active
-              </label>
+            <div className="absolute right-0 top-full z-30 mt-2 max-h-[70vh] w-64 overflow-y-auto rounded-2xl border border-app-border bg-app-card p-3 shadow-xl">
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("completed")}
-                  checked={selectedFilters.completed}
-                />
-                Completed
-              </label>
+              <div className="mb-3 flex items-center justify-between">
+                <h4 className="text-sm font-bold text-app-text">
+                  Filter Tasks
+                </h4>
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("starred")}
-                  checked={selectedFilters.starred}
-                />
-                Starred
-              </label>
+                <button
+                  onClick={() => setIsFilterOpen(false)}
+                  className="rounded-lg p-1 text-app-text-muted transition-colors hover:bg-app-bg hover:text-app-text"
+                  aria-label="Close filters"
+                >
+                  <X size={17} />
+                </button>
+              </div>
 
-              <hr />
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-app-text-muted">
+                Status
+              </p>
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("highPriority")}
-                  checked={selectedFilters.highPriority}
-                />
-                High Priority
-              </label>
+              {[
+                ["active", "Active"],
+                ["completed", "Completed"],
+                ["starred", "Starred"],
+              ].map(([key, label]) => (
+                <label
+                  key={key}
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-app-text transition-colors hover:bg-brand-surface"
+                >
+                  <input
+                    type="checkbox"
+                    onChange={() => toggleFilter(key)}
+                    checked={selectedFilters[key]}
+                    className="h-4 w-4 accent-brand-primary"
+                  />
+                  {label}
+                </label>
+              ))}
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("mediumPriority")}
-                  checked={selectedFilters.mediumPriority}
-                />
-                Medium Priority
-              </label>
+              <div className="my-3 border-t border-app-border" />
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("lowPriority")}
-                  checked={selectedFilters.lowPriority}
-                />
-                Low Priority
-              </label>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-app-text-muted">
+                Priority
+              </p>
 
-              <hr />
+              {[
+                ["highPriority", "High Priority"],
+                ["mediumPriority", "Medium Priority"],
+                ["lowPriority", "Low Priority"],
+              ].map(([key, label]) => (
+                <label
+                  key={key}
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-app-text transition-colors hover:bg-brand-surface"
+                >
+                  <input
+                    type="checkbox"
+                    onChange={() => toggleFilter(key)}
+                    checked={selectedFilters[key]}
+                    className="h-4 w-4 accent-brand-primary"
+                  />
+                  {label}
+                </label>
+              ))}
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("overdue")}
-                  checked={selectedFilters.overdue}
-                />
-                Overdue
-              </label>
+              <div className="my-3 border-t border-app-border" />
 
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleFilter("dueToday")}
-                  checked={selectedFilters.dueToday}
-                />
-                Due Today
-              </label>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-app-text-muted">
+                Due Date
+              </p>
 
-              <hr />
+              {[
+                ["overdue", "Overdue"],
+                ["dueToday", "Due Today"],
+              ].map(([key, label]) => (
+                <label
+                  key={key}
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-app-text transition-colors hover:bg-brand-surface"
+                >
+                  <input
+                    type="checkbox"
+                    onChange={() => toggleFilter(key)}
+                    checked={selectedFilters[key]}
+                    className="h-4 w-4 accent-brand-primary"
+                  />
+                  {label}
+                </label>
+              ))}
 
-              <button className="clear-filters-btn" onClick={clearFilters}>
+              <div className="my-3 border-t border-app-border" />
+
+              <button
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-surface px-3 py-2 text-sm font-semibold text-brand-primary transition-colors hover:bg-brand-primary hover:text-white"
+                onClick={clearFilters}
+              >
+                <X size={15} />
                 Clear Filters
               </button>
             </div>
@@ -363,11 +435,50 @@ function TasksBoard({
         </div>
       </div>
 
-      <hr />
+      {activeFilterCount > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          {Object.entries(selectedFilters)
+            .filter(([, value]) => value)
+            .map(([key]) => (
+              <button
+                key={key}
+                onClick={() => toggleFilter(key)}
+                className="flex items-center gap-1.5 rounded-full bg-brand-surface px-3 py-1.5 text-xs font-medium text-brand-primary transition-colors hover:bg-brand-primary hover:text-white"
+              >
+                {key === "highPriority"
+                  ? "High Priority"
+                  : key === "mediumPriority"
+                    ? "Medium Priority"
+                    : key === "lowPriority"
+                      ? "Low Priority"
+                      : key === "dueToday"
+                        ? "Due Today"
+                        : key === "overdue"
+                          ? "Overdue"
+                          : key.charAt(0).toUpperCase() + key.slice(1)}
+                <X size={12} />
+              </button>
+            ))}
+        </div>
+      )}
 
-      <ul>
+      <div className="mb-4 border-t border-app-border" />
+
+      <ul className="space-y-3">
         {filteredBySelectedFilters.length === 0 ? (
-          <p className="empty-message">{emptyMessage}</p>
+          <li className="flex flex-col items-center justify-center rounded-xl border border-dashed border-app-border bg-app-bg px-4 py-12 text-center">
+            <div className="mb-3 rounded-2xl bg-brand-surface p-4">
+              <CheckCircle2 size={28} className="text-brand-primary" />
+            </div>
+
+            <p className="text-sm font-semibold text-app-text">
+              {emptyMessage}
+            </p>
+
+            <p className="mt-1 text-xs text-app-text-muted">
+              Your tasks will appear here.
+            </p>
+          </li>
         ) : (
           filteredBySelectedFilters.map((elem) => {
             const isOverdue = moment(elem.dueDate).isBefore(moment(), "day");
@@ -375,11 +486,19 @@ function TasksBoard({
             const isToday = moment(elem.dueDate).isSame(moment(), "day");
 
             return (
-              <li className="task-card" key={elem.id}>
-                <div className="card-top">
+              <li
+                className="group relative rounded-xl border border-app-border bg-app-card p-4 transition-all duration-200 hover:border-brand-lavender hover:shadow-md"
+                key={elem.id}
+              >
+                <div className="mb-3 flex items-center justify-between">
                   <button
-                    className={`star-btn ${elem.starred ? "starred" : ""}`}
+                    className={`rounded-lg p-2 transition-colors ${
+                      elem.starred
+                        ? "bg-app-warning/10 text-app-warning"
+                        : "text-app-text-muted hover:bg-brand-surface hover:text-brand-primary"
+                    }`}
                     onClick={() => toggleStar(elem)}
+                    aria-label={elem.starred ? "Remove star" : "Star task"}
                   >
                     <Star
                       size={18}
@@ -387,35 +506,41 @@ function TasksBoard({
                     />
                   </button>
 
-                  <div className="card-actions">
+                  <div className="flex items-center gap-2">
                     <span
-                      className={`priority-badge priority-${elem.priority.toLowerCase()}`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        priorityStyles[elem.priority] || "bg-app-bg text-app-text-muted"
+                      }`}
                     >
                       {elem.priority}
                     </span>
 
                     <button
-                      className="menu-btn"
+                      className="rounded-lg p-2 text-app-text-muted transition-colors hover:bg-app-bg hover:text-app-text"
                       onClick={(e) => {
                         e.stopPropagation();
                         setOpenMenu(openMenu === elem.id ? null : elem.id);
                       }}
+                      aria-label="Task options"
                     >
                       <MoreVertical size={18} />
                     </button>
                   </div>
                 </div>
 
-                <div className="card-body">
+                <div className="flex items-start gap-3">
                   <input
                     type="checkbox"
                     checked={elem.completed}
                     onChange={() => toggleTask(elem)}
+                    className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-brand-primary"
                   />
 
                   <span
-                    className={`task-text ${
-                      elem.completed ? "completed-task" : ""
+                    className={`min-w-0 flex-1 wrap-break-word text-sm font-medium leading-relaxed ${
+                      elem.completed
+                        ? "text-app-text-muted line-through"
+                        : "text-app-text"
                     }`}
                   >
                     {elem.text}
@@ -423,23 +548,41 @@ function TasksBoard({
                 </div>
 
                 {elem.dueDate && (
-                  <div className="card-date">
-                    <span
+                  <div className="mt-3 flex items-center gap-2 pl-7">
+                    <CalendarDays
+                      size={14}
                       className={
-                        isOverdue ? "overdue" : isToday ? "due-today" : ""
+                        isOverdue
+                          ? "text-app-error"
+                          : isToday
+                            ? "text-app-warning"
+                            : "text-app-text-muted"
                       }
+                    />
+
+                    <span
+                      className={`text-xs font-medium ${
+                        isOverdue
+                          ? "text-app-error"
+                          : isToday
+                            ? "text-app-warning"
+                            : "text-app-text-muted"
+                      }`}
                     >
-                      📅 {moment(elem.dueDate).format("MMM DD")}
+                      {moment(elem.dueDate).format("MMM DD")}
+                      {isOverdue && " · Overdue"}
+                      {isToday && " · Due today"}
                     </span>
                   </div>
                 )}
 
                 {openMenu === elem.id && (
                   <div
-                    className="menu-dropdown"
+                    className="absolute right-4 top-14 z-20 w-36 rounded-xl border border-app-border bg-app-card p-1.5 shadow-xl"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-app-text transition-colors hover:bg-brand-surface hover:text-brand-primary"
                       onClick={() => {
                         setIsEditOpen(true);
                         setEditingTask({
@@ -450,16 +593,19 @@ function TasksBoard({
                         setOpenMenu(null);
                       }}
                     >
+                      <SlidersHorizontal size={15} />
                       Edit
                     </button>
 
                     <button
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-app-error transition-colors hover:bg-app-error/10"
                       onClick={() => {
                         setTaskToDelete(elem.id);
                         setIsDeleteOpen(true);
                         setOpenMenu(null);
                       }}
                     >
+                      <Trash2 size={15} />
                       Delete
                     </button>
                   </div>
@@ -470,9 +616,18 @@ function TasksBoard({
         )}
       </ul>
 
-      <div className="counter-box">
-        <button className="clear-btn" onClick={clearCompletedTasks}>
-          🧹Clear Completed
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-app-border pt-4">
+        <p className="text-xs text-app-text-muted">
+          {filteredTasks.filter((task) => task.completed).length} completed
+          {" "}out of {filteredTasks.length} tasks
+        </p>
+
+        <button
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-app-error transition-colors hover:bg-app-error/10"
+          onClick={clearCompletedTasks}
+        >
+          <Trash2 size={15} />
+          Clear Completed
         </button>
       </div>
     </section>

@@ -1,4 +1,3 @@
-import "./DashboardSidebar.css";
 import MiniCalendar from "./MiniCalendar";
 import ProgressOverview from "./ProgressOverview";
 import DailyQuote from "./DailyQuote";
@@ -10,7 +9,7 @@ function DashboardSidebar({
   pendingTasks,
 }) {
   return (
-    <aside className="dashboard-sidebar">
+    <aside className="flex-1 flex flex-col gap-5 p-4">
       <MiniCalendar />
 
       <ProgressOverview

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import Dashboard from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
 
@@ -28,7 +27,7 @@ function App() {
 
   return (
     <>
-      <div className="main-layout">
+      <div className="relative flex h-screen overflow-hidden">
         <Sidebar
           lists={lists}
           selectedList={selectedList}

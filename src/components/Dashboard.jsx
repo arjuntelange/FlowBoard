@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./Dashboard.css";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
+import Notification from "./Notification.jsx";
 import ImportantTasksPage from "./ImportantTasksPage";
 import CompletedTasksPage from "./CompletedTasksPage";
 import ListPage from "./ListPage.jsx";
@@ -90,10 +90,6 @@ function Dashboard({
     setSelectedList,
   );
 
-  // ==================================================
-  // Page Routing
-  // ==================================================
-
   let content;
 
   switch (selectedList) {
@@ -158,6 +154,7 @@ function Dashboard({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           setIsEditOpen={setIsEditOpen}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
@@ -177,6 +174,7 @@ function Dashboard({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           setIsEditOpen={setIsEditOpen}
           setEditingTask={setEditingTask}
           setTaskToDelete={setTaskToDelete}
@@ -197,6 +195,7 @@ function Dashboard({
           toggleTask={toggleTask}
           toggleStar={toggleStar}
           clearCompletedTasks={clearCompletedTasks}
+          notification={notification}
           task={task}
           setTask={setTask}
           priority={priority}
@@ -212,12 +211,17 @@ function Dashboard({
       );
   }
 
-  // ==================================================
-  // Render
-  // ==================================================
   return (
     <>
-      <main className="dashboard">{content}</main>
+      <main className="min-w-0 flex-1 overflow-y-auto">{content}</main>
+
+      {notification.message && (
+        <Notification
+          title={notification.title}
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
 
       <EditTaskModal
         isOpen={isEditOpen}

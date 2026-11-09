@@ -1,4 +1,3 @@
-import "./StatsCards.css";
 import {
   ClipboardList,
   CheckCircle,
@@ -17,49 +16,66 @@ function StatsCards({
       title: "Total Tasks",
       value: totalTasks,
       subtitle: "All your tasks",
-      icon: <ClipboardList size={22} />,
-      className: "total-card",
+      icon: ClipboardList,
+      color: "text-brand-primary",
+      iconBg: "bg-brand-surface",
     },
     {
       title: "Completed",
       value: completedTasks,
       subtitle: "Great progress",
-      icon: <CheckCircle size={22} />,
-      className: "completed-card",
+      icon: CheckCircle,
+      color: "text-app-success",
+      iconBg: "bg-app-success/10",
     },
     {
       title: "Pending",
       value: pendingTasks,
       subtitle: "Keep going",
-      icon: <Clock3 size={22} />,
-      className: "pending-card",
+      icon: Clock3,
+      color: "text-app-warning",
+      iconBg: "bg-app-warning/10",
     },
     {
       title: "High Priority",
       value: highPriorityTasks,
       subtitle: "Needs attention",
-      icon: <Flame size={22} />,
-      className: "priority-card",
+      icon: Flame,
+      color: "text-app-error",
+      iconBg: "bg-app-error/10",
     },
   ];
 
   return (
-    <section className="stats-grid">
-      {stats.map((stat) => (
-        <div key={stat.title} className={`stat-card ${stat.className}`}>
-          <div className="stat-top">
-            <div className="icon-box">
-              {stat.icon}
+    <section className="mb-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {stats.map((stat) => {
+        const Icon = stat.icon;
+
+        return (
+          <div
+            key={stat.title}
+            className="group rounded-2xl border border-app-border bg-app-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h4 className="text-sm font-medium text-app-text-muted">
+                {stat.title}
+              </h4>
+
+              <div className={`rounded-xl p-2.5 ${stat.iconBg}`}>
+                <Icon size={21} className={stat.color} />
+              </div>
             </div>
 
-            <div className="icon-title">
-              <h4>{stat.title}</h4>
-            </div>
+            <h2 className="mb-1 text-3xl font-bold tracking-tight text-app-text">
+              {stat.value}
+            </h2>
+
+            <p className="text-xs text-app-text-muted">
+              {stat.subtitle}
+            </p>
           </div>
-
-          <h2>{stat.value}</h2>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }

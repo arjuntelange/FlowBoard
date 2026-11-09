@@ -1,25 +1,36 @@
-import "./PageHeader.css";
 import React from "react";
+import { Search } from "lucide-react";
 
 function PageHeader({ title, subtitle, searchQuery, setSearchQuery }) {
   return (
-    <header className="page-header">
-      <div className="page-info">
-        <h2>
-          <span className="title-accent"></span>
+    <header className="flex flex-col gap-5 border-b border-app-border bg-app-bg px-8 py-7 md:flex-row md:items-center md:justify-between">
+
+      <div className="flex-1">
+        <h2 className="flex items-center gap-3 text-2xl font-bold tracking-tight text-app-text">
+          <span className="h-7 w-1 rounded-full bg-brand-primary"></span>
           {title}
         </h2>
-        <p>{subtitle}</p>
+
+        <p className="mt-2 text-sm text-app-text-muted">
+          {subtitle}
+        </p>
       </div>
 
-      <div className="page-search">
+      <div className="relative w-full md:max-w-xs">
+        <Search
+          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text-muted"
+        />
+
         <input
           type="text"
-          placeholder="Search tasks... 🔍"
+          placeholder="Search tasks..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full rounded-xl border border-app-border bg-app-card py-3 pl-11 pr-4 text-sm text-app-text outline-none transition-all placeholder:text-app-text-muted focus:border-brand-lavender focus:ring-4 focus:ring-brand-primary/10"
         />
       </div>
+
     </header>
   );
 }

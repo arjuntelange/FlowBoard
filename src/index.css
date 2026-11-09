@@ -1,8 +1,26 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "tailwindcss";
 
+@theme {
+  --color-brand-primary: #3A0CA3;
+  --color-brand-deep: #24104F;
+  --color-brand-hover: #4C1D95;
+  --color-brand-secondary: #5B21B6;
+  --color-brand-lavender: #A78BFA;
+  --color-brand-surface: #F4F0FF;
+  --color-brand-accent: #FFF275;
+
+  --color-app-bg: #F8F7FC;
+  --color-app-card: #FFFFFF;
+  --color-app-text: #25213A;
+  --color-app-text-muted: #6B667A;
+  --color-app-border: #E7E0F0;
+
+  --color-app-success: #15803D;
+  --color-app-warning: #B45309;
+  --color-app-error: #DC2626;
+}
+
+* {
   &::-webkit-scrollbar {
     display: none;
   }
@@ -10,14 +28,10 @@
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-
-  background: #f3f4f6;
-}
-
-#root {
-  width: 100%;
+  background: var(--color-app-bg);
+  color: var(--color-app-text);
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
 }

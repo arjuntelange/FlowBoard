@@ -1,10 +1,7 @@
-import heroBg from "../assets/bg-new.jpg";
-
-import Notification from "./Notification";
+import heroBg from "../assets/purple-bg.jpg";
 import StatsCards from "./StatsCards";
 import InputSection from "./InputSection";
 import TasksBoard from "./TasksBoard";
-import "./DashboardHome.css";
 import DashboardSidebar from "./DashboardSidebar";
 import React from "react";
 
@@ -29,8 +26,6 @@ function DashboardHome({
   searchQuery,
   setSearchQuery,
 
-  notification,
-
   addTask,
   toggleTask,
   toggleStar,
@@ -44,30 +39,31 @@ function DashboardHome({
   setIsDeleteOpen,
 }) {
   return (
-    <div className="container">
-      <div className="hero-banner">
-        <img src={heroBg} alt="Hero Banner" />
+    <div className="w-full h-full bg-app-bg rounded-card">
+      <div className="relative mb-6 w-full h-auto overflow-hidden rounded-t-2xl">
+        <img src={heroBg} alt="Hero Banner" className="block w-full h-full object-cover" />
 
-        <div className="hero-overlay">
-          <div className="hero-content">
-            <h1>Good Morning, Arjun 👋</h1>
+        <div className="absolute inset-0 flex justify-between items-start p-8 bg-linear-to-tr from-black/15 to-black/25">
+          <div className="mt-7 text-white">
+            <h1 className="text-4xl font-bold text-shadow-lg/20 mb-2">Good Morning, Arjun 👋</h1>
 
-            <p>Focus on today, create your future.</p>
+            <p className="text-base text-shadow-md opacity-80">Focus on today, create your future.</p>
           </div>
 
-          <div className="hero-search">
+          <div className="w-80">
             <input
               type="text"
               placeholder=" Search tasks... 🔍"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
+              className="w-full px-3 py-2.5 border-none rounded-xl bg-white/70 shadow-md text-base outline-none backdrop-blur-sm transition duration-300 ease-linear focus:bg-white/60"
             />
           </div>
         </div>
       </div>
 
-      <div className="dashboard-content">
-        <div className="main-content">
+      <div className="flex gap-4">
+        <div className="p-4 flex-2">
           <StatsCards
             totalTasks={totalTasks}
             completedTasks={completedTasks}
@@ -105,14 +101,6 @@ function DashboardHome({
           pendingTasks={pendingTasks}
         />
       </div>
-
-      {notification.message && (
-        <Notification
-          title={notification.title}
-          message={notification.message}
-          type={notification.type}
-        />
-      )}
     </div>
   );
 }
