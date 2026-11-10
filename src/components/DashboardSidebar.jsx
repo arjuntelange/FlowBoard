@@ -1,3 +1,4 @@
+
 import MiniCalendar from "./MiniCalendar";
 import ProgressOverview from "./ProgressOverview";
 import DailyQuote from "./DailyQuote";
@@ -9,7 +10,7 @@ function DashboardSidebar({
   pendingTasks,
 }) {
   return (
-    <aside className="flex-1 flex flex-col gap-5 p-4">
+    <aside className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:flex xl:flex-col">
       <MiniCalendar />
 
       <ProgressOverview
@@ -19,7 +20,9 @@ function DashboardSidebar({
         pendingTasks={pendingTasks}
       />
 
-      <DailyQuote />
+      <div className="sm:col-span-2 xl:col-span-1">
+        <DailyQuote />
+      </div>
     </aside>
   );
 }

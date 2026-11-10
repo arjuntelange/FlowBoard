@@ -12,7 +12,7 @@ function InputSection({
   onHandleKeyDown,
 }) {
   return (
-    <section className="mb-8 w-full rounded-2xl border border-app-border bg-app-card p-5 shadow-sm sm:p-6">
+    <section className="mb-6 w-full min-w-0 rounded-2xl border border-app-border bg-app-card p-4 shadow-sm sm:mb-8 sm:p-6">
 
       <div className="mb-5">
         <h3 className="text-lg font-bold text-app-text">
@@ -36,9 +36,9 @@ function InputSection({
         />
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
 
           <div className="relative">
             <select

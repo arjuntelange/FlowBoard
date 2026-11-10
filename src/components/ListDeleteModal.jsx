@@ -4,8 +4,8 @@ function ListDeleteModal({ isOpen, onClose, listToDelete, onConfirm }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-brand-deep/40 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-app-border bg-app-card p-7 shadow-2xl">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto bg-brand-deep/40 p-3 backdrop-blur-sm sm:p-4">
+      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-app-border bg-app-card p-4 shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:p-6">
 
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-app-error">
           <AlertTriangle size={30} />
@@ -30,7 +30,7 @@ function ListDeleteModal({ isOpen, onClose, listToDelete, onConfirm }) {
           </p>
         </div>
 
-        <div className="mt-7 flex gap-3">
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
           <button
             onClick={onClose}
             className="flex-1 rounded-xl border border-app-border bg-app-bg px-4 py-3 text-sm font-semibold text-app-text transition hover:bg-brand-surface"

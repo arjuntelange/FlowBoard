@@ -47,7 +47,7 @@ function StatsCards({
   ];
 
   return (
-    <section className="mb-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="mb-6 grid w-full grid-cols-2 gap-3 sm:mb-8 sm:gap-4 xl:grid-cols-4">
       {stats.map((stat) => {
         const Icon = stat.icon;
 

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
@@ -5,20 +6,16 @@ import Sidebar from "./components/Sidebar";
 function App() {
   const [lists, setList] = useState(() => {
     const savedList = localStorage.getItem("lists");
-
     return savedList ? JSON.parse(savedList) : [];
   });
 
   const [selectedList, setSelectedList] = useState("dashboard");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [isInputOpen, setIsInputOpen] = useState(false);
-
   const [isListEditOpen, setIsListEditOpen] = useState(false);
-
   const [editingList, setEditingList] = useState(null);
-
   const [isListDeleteOpen, setIsListDeleteOpen] = useState(false);
-
   const [listToDelete, setListToDelete] = useState(null);
 
   useEffect(() => {
@@ -26,37 +23,40 @@ function App() {
   }, [lists]);
 
   return (
-    <>
-      <div className="relative flex h-screen overflow-hidden">
-        <Sidebar
-          lists={lists}
-          selectedList={selectedList}
-          setSelectedList={setSelectedList}
-          setIsInputOpen={setIsInputOpen}
-          setIsListEditOpen={setIsListEditOpen}
-          setEditingList={setEditingList}
-          setIsListDeleteOpen={setIsListDeleteOpen}
-          setListToDelete={setListToDelete}
-        />
+    <div className="relative flex h-dvh w-full overflow-hidden bg-app-bg">
 
-        <Dashboard
-          selectedList={selectedList}
-          setSelectedList={setSelectedList}
-          lists={lists}
-          setList={setList}
-          isInputOpen={isInputOpen}
-          setIsInputOpen={setIsInputOpen}
-          isListEditOpen={isListEditOpen}
-          setIsListEditOpen={setIsListEditOpen}
-          editingList={editingList}
-          setEditingList={setEditingList}
-          isListDeleteOpen={isListDeleteOpen}
-          setIsListDeleteOpen={setIsListDeleteOpen}
-          listToDelete={listToDelete}
-          setListToDelete={setListToDelete}
-        />
-      </div>
-    </>
+      <Sidebar
+        lists={lists}
+        selectedList={selectedList}
+        setSelectedList={setSelectedList}
+        setIsInputOpen={setIsInputOpen}
+        setIsListEditOpen={setIsListEditOpen}
+        setEditingList={setEditingList}
+        setIsListDeleteOpen={setIsListDeleteOpen}
+        setListToDelete={setListToDelete}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
+
+      <Dashboard
+        selectedList={selectedList}
+        setSelectedList={setSelectedList}
+        lists={lists}
+        setList={setList}
+        isInputOpen={isInputOpen}
+        setIsInputOpen={setIsInputOpen}
+        isListEditOpen={isListEditOpen}
+        setIsListEditOpen={setIsListEditOpen}
+        editingList={editingList}
+        setEditingList={setEditingList}
+        isListDeleteOpen={isListDeleteOpen}
+        setIsListDeleteOpen={setIsListDeleteOpen}
+        listToDelete={listToDelete}
+        setListToDelete={setListToDelete}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
+
+    </div>
   );
 }
 

@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 
 function PageHeader({ title, subtitle, searchQuery, setSearchQuery }) {
   return (
-    <header className="flex flex-col gap-5 border-b border-app-border bg-app-bg px-8 py-7 md:flex-row md:items-center md:justify-between">
+    <header className="flex flex-col gap-4 border-b border-app-border bg-app-bg px-4 py-5 sm:gap-5 sm:px-6 sm:py-6 md:flex-row md:items-center md:justify-between lg:px-8">
 
       <div className="flex-1">
         <h2 className="flex items-center gap-3 text-2xl font-bold tracking-tight text-app-text">

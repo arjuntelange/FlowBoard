@@ -26,7 +26,7 @@ function ListPage({
   setDueDate,
 }) {
   return (
-    <div className="min-h-full w-full bg-app-bg">
+    <div className="min-w-0 px-3 py-4 sm:px-5 sm:py-6 lg:px-8">
 
       <PageHeader
         title={selectedList.name}
@@ -35,7 +35,7 @@ function ListPage({
         setSearchQuery={setSearchQuery}
       />
 
-      <div className="px-8 py-6">
+      <div className="px-4 py-6">
 
         <InputSection
           task={task}

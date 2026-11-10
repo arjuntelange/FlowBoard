@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Menu } from "lucide-react";
 import DashboardHome from "./DashboardHome.jsx";
 import AllTasksPage from "./AllTasksPage";
 import Notification from "./Notification.jsx";
@@ -31,6 +32,7 @@ function Dashboard({
   setIsListDeleteOpen,
   listToDelete,
   setListToDelete,
+  setIsSidebarOpen,
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -213,7 +215,24 @@ function Dashboard({
 
   return (
     <>
-      <main className="min-w-0 flex-1 overflow-y-auto">{content}</main>
+      <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
+        <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-app-border bg-app-card/95 px-4 py-3 backdrop-blur-md md:hidden">
+          <button
+            type="button"
+            onClick={() => setIsSidebarOpen(true)}
+            aria-label="Open navigation"
+            className="rounded-xl border border-app-border p-2 text-brand-primary transition hover:bg-brand-surface"
+          >
+            <Menu size={21} />
+          </button>
+
+          <span className="text-lg font-bold text-brand-primary">
+            FlowBoard
+          </span>
+        </div>
+
+        {content}
+      </main>
 
       {notification.message && (
         <Notification
