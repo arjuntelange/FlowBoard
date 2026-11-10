@@ -27,7 +27,7 @@ function Notification({ title, message, type }) {
 
   return (
     <div
-      className={`fixed right-6 top-6 w-80 max-w-[calc(100vw-3rem)] py-4 px-5 z-[1001] rounded-2xl border border-app-border border-l-4 bg-app-card shadow-xl animate-[slideIn_0.3s_ease] ${styles.border}`}
+      className={`fixed left-3 right-3 top-3 z-[1001] rounded-2xl border border-app-border border-l-4 bg-app-card px-4 py-3 shadow-xl animate-[slideIn_0.3s_ease] sm:left-auto sm:right-6 sm:top-6 sm:w-80 sm:px-5 sm:py-4 ${styles.border}`}
     >
       <h4 className={`mb-1.5 text-base font-bold ${styles.title}`}>{title}</h4>
       <p className="text-sm leading-relaxed text-app-text-muted">{message}</p>

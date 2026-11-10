@@ -8,11 +8,11 @@ function ListInputModal({ isOpen, onClose, onCreateList }) {
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center bg-brand-deep/40 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto bg-brand-deep/40 p-3 backdrop-blur-sm sm:p-4"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl border border-app-border bg-app-card p-6 shadow-2xl"
+        className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-app-border bg-app-card p-4 shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-5 flex items-center justify-between">
@@ -52,7 +52,7 @@ function ListInputModal({ isOpen, onClose, onCreateList }) {
           className="w-full rounded-xl border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text outline-none transition placeholder:text-app-text-muted focus:border-brand-lavender focus:ring-4 focus:ring-brand-primary/10"
         />
 
-        <div className="mt-7 flex justify-end gap-3">
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
           <button
             onClick={onClose}
             className="rounded-xl border border-app-border bg-app-bg px-5 py-3 text-sm font-semibold text-app-text transition hover:bg-brand-surface"

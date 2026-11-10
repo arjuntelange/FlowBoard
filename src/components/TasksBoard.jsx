@@ -487,7 +487,7 @@ function TasksBoard({
 
             return (
               <li
-                className="group relative rounded-xl border border-app-border bg-app-card p-4 transition-all duration-200 hover:border-brand-lavender hover:shadow-md"
+                className="group relative min-w-0 rounded-xl border border-app-border bg-app-card p-3 transition-all duration-200 hover:border-brand-lavender hover:shadow-md sm:p-4"
                 key={elem.id}
               >
                 <div className="mb-3 flex items-center justify-between">
